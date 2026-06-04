@@ -36,16 +36,16 @@ const KHMER_KEYMAP = {
     "/": { "normal": "៊", "shift": "?", "altGr": "/" },
     "1": { "normal": "១", "shift": "!", "altGr": "" },
     "2": { "normal": "២", "shift": "ៗ", "altGr": "" },
-    "3": { "normal": "៣", "shift": "៌", "altGr": "" },
-    "4": { "normal": "៤", "shift": "៍", "altGr": "៎" },
+    "3": { "normal": "៣", "shift": '"', "altGr": "" },
+    "4": { "normal": "៤", "shift": "៛", "altGr": "៎" },
     "5": { "normal": "៥", "shift": "ឺ", "altGr": "៩" },
     "6": { "normal": "៦", "shift": "័", "altGr": "ៗ" },
     "7": { "normal": "៧", "shift": "៏", "altGr": "៳" },
     "8": { "normal": "៨", "shift": "ំ", "altGr": "៴" },
     "9": { "normal": "៩", "shift": "់", "altGr": "៵" },
-    "0": { "normal": "០", "shift": "៌", "altGr": "៶" },
-    "-": { "normal": "ឥ", "shift": "ឱ", "altGr": "៷" },
-    "=": { "normal": "ឲ", "shift": "ឧ", "altGr": "៸" },
+    "0": { "normal": "០", "shift": ")", "altGr": "៶" },
+    "-": { "normal": "ឥ", "shift": "៌", "altGr": "៷" },
+    "=": { "normal": "ឲ", "shift": "=", "altGr": "៸" },
     "space": { "normal": "\u200B", "shift": " ", "altGr": "" }
 };
 
@@ -71,12 +71,7 @@ KHMER_TO_QWERTY['ោះ'] = { qwerty: ':', code: 'Semicolon', shift: true, name:
 // --- Game Content Pool (Lessons & Sentences) ---
 const GAME_LESSONS = {
     consonants: [
-        "កខគឃង",
-        "ចឆជឈញ",
-        "ដឋឌឍណ",
-        "តថទធន",
-        "បផពភម",
-        "យរលវសហឡអ"
+        "កខគឃងចឆជឈញដឋឌឍណតថទធនបផពភមយរលវសហឡអ"
     ],
     vowels: [
         "កាកិកីកឹកឺកុកូកួ",
@@ -125,6 +120,10 @@ class AudioSynth {
     constructor() {
         this.ctx = null;
         this.enabled = true;
+
+        // Preload physical assets
+        this.correctPopSound = new Audio('assets/sounds/correct_pop.mp3');
+        this.vineBoomSound = new Audio('assets/sounds/vine_boom.mp3');
     }
 
     init() {
@@ -138,40 +137,14 @@ class AudioSynth {
 
     playClick() {
         if (!this.enabled) return;
-        this.init();
-        const osc = this.ctx.createOscillator();
-        const gain = this.ctx.createGain();
-        osc.connect(gain);
-        gain.connect(this.ctx.destination);
-
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(800, this.ctx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(100, this.ctx.currentTime + 0.05);
-
-        gain.gain.setValueAtTime(0.1, this.ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.05);
-
-        osc.start();
-        osc.stop(this.ctx.currentTime + 0.05);
+        this.correctPopSound.currentTime = 0;
+        this.correctPopSound.play().catch(e => console.warn('Audio play failed:', e));
     }
 
     playError() {
         if (!this.enabled) return;
-        this.init();
-        const osc = this.ctx.createOscillator();
-        const gain = this.ctx.createGain();
-        osc.connect(gain);
-        gain.connect(this.ctx.destination);
-
-        osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(180, this.ctx.currentTime);
-        osc.frequency.linearRampToValueAtTime(80, this.ctx.currentTime + 0.15);
-
-        gain.gain.setValueAtTime(0.15, this.ctx.currentTime);
-        gain.gain.linearRampToValueAtTime(0.01, this.ctx.currentTime + 0.15);
-
-        osc.start();
-        osc.stop(this.ctx.currentTime + 0.15);
+        this.vineBoomSound.currentTime = 0;
+        this.vineBoomSound.play().catch(e => console.warn('Audio play failed:', e));
     }
 
     playSuccess() {
@@ -243,7 +216,7 @@ class TypingAdventureGame {
         this.isPaused = false;
 
         // Lesson state
-        this.currentLesson = 'words';
+        this.currentLesson = 'consonants';
         this.currentText = "";
         this.textCodepoints = []; // Array of unicode codepoints to type
         this.typedIndex = 0; // Current index in textCodepoints
@@ -341,16 +314,16 @@ class TypingAdventureGame {
             if (key === ',') codeStr = 'Comma';
             if (key === '.') codeStr = 'Period';
             if (key === '/') codeStr = 'Slash';
-            
+
             const keyEl = document.getElementById(codeStr);
             if (keyEl) {
                 const normalEl = keyEl.querySelector('.key-bottom-right.purple');
                 const shiftEl = keyEl.querySelector('.key-top-right.purple');
                 const altGrEl = keyEl.querySelector('.key-top-left');
-                
+
                 if (normalEl) normalEl.innerText = mapInfo.normal;
                 if (shiftEl) shiftEl.innerText = mapInfo.shift;
-                
+
                 if (altGrEl) {
                     if (mapInfo.altGr) {
                         altGrEl.innerText = mapInfo.altGr;
@@ -385,24 +358,20 @@ class TypingAdventureGame {
         this.dom.pauseOverlay.classList.add('hide');
         this.restartStats();
 
-        // Cancel obstacle loop
-        if (this.obstacleFrameId) {
-            cancelAnimationFrame(this.obstacleFrameId);
-            this.obstacleFrameId = null;
+        // Reset explorer progression and camera
+        const explorerEl = this.dom.explorer;
+        if (explorerEl) {
+            explorerEl.style.transform = 'translateX(0px)';
+            explorerEl.parentElement.style.transform = 'translateX(0px)';
+            explorerEl.classList.remove('stumble', 'flash-red');
         }
 
-        // Clear active and crumbling obstacle elements from DOM
+        // Clear active static obstacles from DOM
         if (this.activeObstacles) {
             this.activeObstacles.forEach(o => {
                 if (o.el && o.el.parentNode) o.el.parentNode.removeChild(o.el);
             });
             this.activeObstacles = [];
-        }
-        if (this.crumblingElements) {
-            this.crumblingElements.forEach(o => {
-                if (o.el && o.el.parentNode) o.el.parentNode.removeChild(o.el);
-            });
-            this.crumblingElements = [];
         }
 
         // Reset original monster styling
@@ -473,14 +442,16 @@ class TypingAdventureGame {
             this.timerInterval = null;
         }
 
-        // Cancel obstacle loop
-        if (this.obstacleFrameId) {
-            cancelAnimationFrame(this.obstacleFrameId);
-            this.obstacleFrameId = null;
-        }
-
         // Pause running animations
         this.pauseRunnerAnimations();
+
+        // Pause obstacle loop if consonants level
+        if (this.currentLesson === 'consonants') {
+            if (this.obstacleFrameId) {
+                cancelAnimationFrame(this.obstacleFrameId);
+                this.obstacleFrameId = null;
+            }
+        }
 
         // Show pause overlay
         this.dom.pauseOverlay.classList.remove('hide');
@@ -522,11 +493,6 @@ class TypingAdventureGame {
 
     // Load next text block based on selected lesson
     loadNextText() {
-        if (this.currentLesson === 'consonants') {
-            this.initObstacleQueue();
-            return;
-        }
-
         const pool = GAME_LESSONS[this.currentLesson];
         let text = "";
 
@@ -547,111 +513,71 @@ class TypingAdventureGame {
         this.typedIndex = 0;
 
         // Parse text into codepoints. 
-        // We need to parse codepoint-by-codepoint, but also account for combined marks in display.
         this.textCodepoints = Array.from(text);
 
-        // Update monster display label (shorten if too long)
-        let monsterLabel = text.replace(/\u200B/g, ' '); // Replace ZWSP with space for label display
+        // Update monster display label
+        let monsterLabel = text.replace(/\u200B/g, ' ');
         if (monsterLabel.length > 12) {
             monsterLabel = monsterLabel.substring(0, 10) + '...';
         }
-        this.dom.monsterText.innerText = monsterLabel;
-        this.dom.monster.className = 'monster';
+
+        if (this.currentLesson === 'consonants') {
+            this.dom.monster.style.display = 'none'; // hide monster for basic linear progression
+            this.spawnStaticObstacles();
+        } else {
+            this.dom.monster.style.display = '';
+            this.dom.monsterText.innerText = monsterLabel;
+            this.dom.monster.className = 'monster';
+        }
 
         this.renderPromptSlab();
         this.updateNextCharacterHint();
     }
 
-    // --- LEVEL 1 MULTI-OBSTACLE QUEUE ENGINE FUNCTIONS ---
-    initObstacleQueue() {
-        // Clear existing obstacles
+    spawnStaticObstacles() {
         if (this.activeObstacles) {
             this.activeObstacles.forEach(o => {
                 if (o.el && o.el.parentNode) o.el.parentNode.removeChild(o.el);
             });
         }
-        if (this.crumblingElements) {
-            this.crumblingElements.forEach(o => {
-                if (o.el && o.el.parentNode) o.el.parentNode.removeChild(o.el);
+        this.activeObstacles = [];
+
+        const startX = 500; // Explorer's start + lead time
+        const gap = 150; // Horizontal distance padding between obstacles
+
+        for (let i = 0; i < this.textCodepoints.length; i++) {
+            const char = this.textCodepoints[i];
+            const xPos = startX + (i * gap);
+
+            // Alternating visuals for consonants
+            const type = (i % 2 === 0) ? 'sentinel' : 'crate';
+
+            const el = document.createElement('div');
+            el.className = `monster ${type === 'sentinel' ? 'robot-sentinel' : 'cyber-crate'}`;
+            el.style.position = 'absolute';
+            el.style.bottom = '30px';
+            el.style.left = `${xPos}px`;
+            el.style.right = 'auto';
+            el.style.transition = 'none';
+            el.style.zIndex = '1';
+
+            const label = document.createElement('div');
+            label.className = 'monster-label';
+            label.innerText = char;
+            el.appendChild(label);
+
+            this.dom.explorer.parentElement.appendChild(el);
+
+            this.activeObstacles.push({
+                type: type,
+                char: char,
+                x: xPos,
+                el: el
             });
         }
 
-        this.activeObstacles = [];
-        this.crumblingElements = [];
-
-        // Hide original monster
-        if (this.dom.monster) {
-            this.dom.monster.style.display = 'none';
-        }
-
-        // Pre-spawn 4 spaced out obstacles
-        let startX = 500;
-        for (let i = 0; i < 4; i++) {
-            this.spawnObstacleAt(startX);
-            startX += 300;
-        }
-
-        this.updateActiveTarget();
-    }
-
-    spawnObstacleAt(x) {
-        const consonantsPool = "កខគឃងចឆជឈញដឋឌឍណតថទធនបផពភមយរលវសហឡអ";
-        const randomChar = consonantsPool[Math.floor(Math.random() * consonantsPool.length)];
-        const types = ['sentinel', 'crate', 'gap'];
-        const type = types[Math.floor(Math.random() * types.length)];
-
-        // Create DOM element
-        const el = document.createElement('div');
-        el.className = `monster ${type === 'sentinel' ? 'robot-sentinel' : type === 'crate' ? 'cyber-crate' : 'floor-gap'}`;
-        el.style.position = 'absolute';
-        el.style.bottom = '30px';
-        el.style.left = `${x}px`;
-        el.style.right = 'auto';
-        el.style.transition = 'none'; // disable frame transit delay
-
-        const label = document.createElement('div');
-        label.className = 'monster-label';
-        label.innerText = randomChar;
-        el.appendChild(label);
-
-        this.dom.explorer.parentElement.appendChild(el);
-
-        this.activeObstacles.push({
-            type: type,
-            char: randomChar,
-            x: x,
-            el: el
-        });
-    }
-
-    updateActiveTarget() {
-        if (this.activeObstacles.length === 0) return;
-
-        const target = this.activeObstacles[0];
-        this.obstacleType = target.type;
-        this.obstacleChar = target.char;
-        this.obstacleX = target.x;
-
-        this.currentText = target.char;
-        this.textCodepoints = [target.char];
-        this.typedIndex = 0;
-
-        // Visual distinction for the current target obstacle
-        this.activeObstacles.forEach((o, index) => {
-            const labelEl = o.el.querySelector('.monster-label');
-            if (labelEl) {
-                if (index === 0) {
-                    labelEl.style.borderColor = 'var(--primary-cyan)';
-                    labelEl.style.boxShadow = '0 0 15px var(--primary-cyan)';
-                } else {
-                    labelEl.style.borderColor = '';
-                    labelEl.style.boxShadow = '';
-                }
-            }
-        });
-
-        this.renderPromptSlab();
-        this.updateNextCharacterHint();
+        if (this.obstacleFrameId) cancelAnimationFrame(this.obstacleFrameId);
+        this.obstacleFrameId = requestAnimationFrame(() => this.obstacleUpdateLoop());
     }
 
     obstacleUpdateLoop() {
@@ -660,42 +586,31 @@ class TypingAdventureGame {
             return;
         }
 
-        const speed = 2.5 + (this.consonantProgress * 0.15);
+        const speed = 0.2; // 10x slower to match floor parallax
 
-        // Move active obstacles
-        this.activeObstacles.forEach(o => {
-            o.x -= speed;
-            o.el.style.left = `${o.x}px`;
-        });
+        // Move ONLY the active target
+        if (this.activeObstacles.length > 0 && this.typedIndex < this.activeObstacles.length) {
+            const target = this.activeObstacles[this.typedIndex];
 
-        // Move and garbage-collect crumbling obstacles
-        for (let i = this.crumblingElements.length - 1; i >= 0; i--) {
-            const c = this.crumblingElements[i];
-            c.x -= speed;
-            c.el.style.left = `${c.x}px`;
-            if (c.x < -100) {
-                if (c.el && c.el.parentNode) c.el.parentNode.removeChild(c.el);
-                this.crumblingElements.splice(i, 1);
+            if (target.isBouncing) {
+                target.x += 15.0; // move quickly back
+                if (target.x >= 500) {
+                    target.x = 500;
+                    target.isBouncing = false;
+                }
+            } else if (target.isCharging) {
+                target.x -= 15.0; // speed up towards player
+                if (target.x <= 140) {
+                    this.handleObstacleMiss(target);
+                }
+            } else {
+                target.x -= speed;
+                if (target.x <= 140) {
+                    this.handleObstacleMiss(target);
+                }
             }
-        }
 
-        // Maintain the obstacle queue ahead of explorer
-        if (this.activeObstacles.length > 0) {
-            const lastObstacle = this.activeObstacles[this.activeObstacles.length - 1];
-            const stageWidth = this.dom.explorer.parentElement.clientWidth || 900;
-            if (lastObstacle.x < stageWidth) {
-                this.spawnObstacleAt(lastObstacle.x + 300);
-            }
-        }
-
-        // Verify collision on active target
-        if (this.activeObstacles.length > 0) {
-            const target = this.activeObstacles[0];
-            this.obstacleX = target.x;
-            if (target.x <= 140) {
-                this.handleObstacleMiss(target);
-                return;
-            }
+            target.el.style.left = `${target.x}px`;
         }
 
         this.obstacleFrameId = requestAnimationFrame(() => this.obstacleUpdateLoop());
@@ -708,14 +623,17 @@ class TypingAdventureGame {
         synth.playError();
         this.triggerPlayerDamage();
 
-        // Remove from active queue and let it pass through
-        const shifted = this.activeObstacles.shift();
-        if (shifted) {
-            this.crumblingElements.push(shifted); // scrolls off-screen without crumble class
-        }
+        // Stop charge, trigger smooth bounce back
+        target.isCharging = false;
+        target.isBouncing = true;
+
+        // Shake prompt slab
+        this.dom.typingText.parentElement.classList.add('shake');
+        setTimeout(() => {
+            this.dom.typingText.parentElement.classList.remove('shake');
+        }, 200);
 
         this.updateStatsDisplay();
-        this.updateActiveTarget();
     }
 
     triggerPlayerDamage() {
@@ -985,69 +903,37 @@ class TypingAdventureGame {
         this.correctCharsTyped++;
         this.typedIndex++;
 
-        if (this.currentLesson === 'consonants') {
-            this.score += 15;
-            synth.playClick();
-
-            // Trigger correct explorer action based on obstacle type
-            if (this.obstacleType === 'sentinel') {
-                this.triggerExplorerAction('attack');
-            } else if (this.obstacleType === 'crate') {
-                this.triggerExplorerAction('smash');
-            } else if (this.obstacleType === 'gap') {
-                this.triggerExplorerAction('jump');
-            }
-
-            // Move current target to crumbling list
-            const target = this.activeObstacles.shift();
-            if (target) {
-                target.el.classList.add('crumble');
-                this.crumblingElements.push(target);
-            }
-
-            this.consonantProgress++;
-            this.updateStatsDisplay();
-
-            // Check if level completed
-            if (this.consonantProgress >= this.consonantTarget) {
-                synth.playSuccess();
-                this.clearKeyHighlights();
-
-                // Clear remaining obstacles
-                this.activeObstacles.forEach(o => {
-                    if (o.el && o.el.parentNode) o.el.parentNode.removeChild(o.el);
-                });
-                this.activeObstacles = [];
-
-                this.dom.nextCharHint.innerHTML = "អបអរសាទរ! Level 1 Completed! 🎉";
-                this.pauseRunnerAnimations();
-
-                if (this.obstacleFrameId) {
-                    cancelAnimationFrame(this.obstacleFrameId);
-                    this.obstacleFrameId = null;
-                }
-
-                setTimeout(() => {
-                    this.changeLesson('vowels'); // auto progress to vowels
-                }, 1500);
-            } else {
-                // Instantly update active target and keep moving
-                this.updateActiveTarget();
-            }
-            return;
-        }
-
         this.score += 10;
-
         synth.playClick();
         this.renderPromptSlab();
 
-        // Jump Explorer on typing vowels/combining signs, jump/attack on consonants
-        const char = this.textCodepoints[this.typedIndex - 1];
-        if (['ក', 'ខ', 'គ', 'ឃ', 'ង', 'ច', 'ឆ', 'ជ', 'ឈ', 'ញ', 'ដ', 'ឋ', 'ឌ', 'ឍ', 'ណ', 'ត', 'ថ', 'ទ', 'ធ', 'ន', 'ប', 'ផ', 'ព', 'ភ', 'ម', 'យ', 'រ', 'ល', 'វ', 'ស', 'ហ', 'ឡ', 'អ'].includes(char)) {
-            this.triggerExplorerAction('attack');
-        } else if (['ា', 'ិ', 'ី', 'ឹ', 'ឺ', 'ុ', 'ូ', 'ួ', 'ើ', 'ឿ', 'ៀ', 'េ', 'ែ', 'ៃ', 'ោ', 'ៅ', '្', '់', 'ំ', 'ះ'].includes(char)) {
-            this.triggerExplorerAction('jump');
+        if (this.currentLesson === 'consonants') {
+            // Clear the static obstacle at this index
+            if (this.activeObstacles && this.typedIndex - 1 < this.activeObstacles.length) {
+                const target = this.activeObstacles[this.typedIndex - 1];
+                if (target && target.el) {
+                    target.el.classList.add('crumble');
+                    // Play specific animation depending on type
+                    this.triggerExplorerAction(target.type === 'sentinel' ? 'attack' : 'smash');
+                }
+
+                // Shift the remaining queue forward by 150px since the obstacle was completed
+                for (let i = this.typedIndex; i < this.activeObstacles.length; i++) {
+                    const o = this.activeObstacles[i];
+                    o.x -= 150;
+                    o.el.style.left = `${o.x}px`;
+                }
+            } else {
+                this.triggerExplorerAction('attack');
+            }
+        } else {
+            // Jump Explorer on typing vowels/combining signs, jump/attack on consonants
+            const char = this.textCodepoints[this.typedIndex - 1];
+            if (['ក', 'ខ', 'គ', 'ឃ', 'ង', 'ច', 'ឆ', 'ជ', 'ឈ', 'ញ', 'ដ', 'ឋ', 'ឌ', 'ឍ', 'ណ', 'ត', 'ថ', 'ទ', 'ធ', 'ន', 'ប', 'ផ', 'ព', 'ភ', 'ម', 'យ', 'រ', 'ល', 'វ', 'ស', 'ហ', 'ឡ', 'អ'].includes(char)) {
+                this.triggerExplorerAction('attack');
+            } else if (['ា', 'ិ', 'ី', 'ឹ', 'ឺ', 'ុ', 'ូ', 'ួ', 'ើ', 'ឿ', 'ៀ', 'េ', 'ែ', 'ៃ', 'ោ', 'ៅ', '្', '់', 'ំ', 'ះ'].includes(char)) {
+                this.triggerExplorerAction('jump');
+            }
         }
 
         // Calculate progress and end text
@@ -1060,31 +946,30 @@ class TypingAdventureGame {
     }
 
     processIncorrectKeystroke() {
-        this.errorsCount++;
-        this.incorrectKeyPressCount++; // Increment target error counter
-        this.score = Math.max(0, this.score - 5);
-
-        synth.playError();
-
         if (this.currentLesson === 'consonants') {
-            this.triggerPlayerDamage();
+            // Trigger enemy charge instead of instant damage/bounce
+            if (this.activeObstacles && this.typedIndex < this.activeObstacles.length) {
+                const target = this.activeObstacles[this.typedIndex];
+                if (target && !target.isCharging && !target.isBouncing) {
+                    target.isCharging = true;
+                }
+            }
 
-            // Shake prompt slab
+            // Shake prompt slab for immediate visual feedback of typo
             this.dom.typingText.parentElement.classList.add('shake');
             setTimeout(() => {
                 this.dom.typingText.parentElement.classList.remove('shake');
             }, 200);
 
-            // Remove current target from active queue and let it pass through
-            const target = this.activeObstacles.shift();
-            if (target) {
-                this.crumblingElements.push(target); // scrolls off-screen without crumble class
-            }
-
-            this.updateStatsDisplay();
-            this.updateActiveTarget();
+            // Defers score penalty and audio to handleObstacleMiss collision
             return;
         }
+
+        this.errorsCount++;
+        this.incorrectKeyPressCount++; // Increment target error counter
+        this.score = Math.max(0, this.score - 5);
+
+        synth.playError();
 
         // Shake prompt slab
         this.dom.typingText.parentElement.classList.add('shake');
@@ -1100,16 +985,24 @@ class TypingAdventureGame {
         this.updateStatsDisplay();
         this.clearKeyHighlights();
 
-        // Defeat monster animation
-        this.dom.monster.classList.add('crumble');
         this.pauseRunnerAnimations();
-
         synth.playSuccess();
 
-        setTimeout(() => {
-            this.loadNextText();
-            this.resumeRunnerAnimations();
-        }, 1200);
+        if (this.currentLesson === 'consonants') {
+            this.dom.nextCharHint.innerHTML = "អបអរសាទរ! Level 1 Completed! 🎉";
+            setTimeout(() => {
+                this.changeLesson('vowels'); // auto progress to vowels
+            }, 1500);
+        } else {
+            // Defeat monster animation
+            if (this.dom.monster) {
+                this.dom.monster.classList.add('crumble');
+            }
+            setTimeout(() => {
+                this.loadNextText();
+                this.resumeRunnerAnimations();
+            }, 1200);
+        }
     }
 
     triggerExplorerAction(action) {
