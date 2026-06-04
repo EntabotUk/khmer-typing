@@ -831,11 +831,10 @@ body {
     opacity: 0.3;
 }
 
-/* Next key hint highlight */
 .key.highlight-next {
-    border-color: var(--primary-cyan);
-    box-shadow: 0 0 12px var(--primary-cyan), inset 0 0 8px rgba(0, 229, 255, 0.2);
-    animation: pulseHighlight 0.6s infinite alternate;
+    border-color: #ffd000;
+    box-shadow: 0 0 12px #ffd000, inset 0 0 8px rgba(255, 208, 0, 0.2);
+    animation: pulseHighlightYellow 0.6s infinite alternate;
 }
 
 .key.highlight-shift {
@@ -844,9 +843,21 @@ body {
     animation: pulseShiftHighlight 0.6s infinite alternate;
 }
 
-@keyframes pulseHighlight {
-    0% { box-shadow: 0 0 4px var(--primary-cyan); }
-    100% { box-shadow: 0 0 15px var(--primary-cyan); }
+@keyframes pulseHighlightYellow {
+    0% { box-shadow: 0 0 4px #ffd000; }
+    100% { box-shadow: 0 0 15px #ffd000; }
+}
+
+.key.glow-correct {
+    border-color: #39ff14 !important;
+    box-shadow: 0 0 15px #39ff14, inset 0 0 10px rgba(57, 255, 20, 0.3) !important;
+    background-color: rgba(57, 255, 20, 0.15) !important;
+}
+
+.key.glow-incorrect {
+    border-color: #ff3838 !important;
+    box-shadow: 0 0 15px #ff3838, inset 0 0 10px rgba(255, 56, 56, 0.3) !important;
+    background-color: rgba(255, 56, 56, 0.15) !important;
 }
 
 @keyframes pulseShiftHighlight {

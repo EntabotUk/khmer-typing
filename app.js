@@ -1,138 +1,71 @@
 // --- Khmer Unicode Keymap Mapping (NiDA Layout) ---
 const KHMER_KEYMAP = {
-    // Row 1 (Numbers / Symbols)
-    '`': { char: '«', code: 'Backquote', shift: false, name: '« (បើកសម្រង់)' },
-    '~': { char: '»', code: 'Backquote', shift: true, name: '» (បិទសម្រង់)' },
-    '1': { char: '១', code: 'Digit1', shift: false, name: '១ (មួយ)' },
-    '!': { char: '!', code: 'Digit1', shift: true, name: '! (ឧទានសញ្ញា)' },
-    '2': { char: '២', code: 'Digit2', shift: false, name: '២ (ពីរ)' },
-    '@': { char: 'ៗ', code: 'Digit2', shift: true, name: 'ៗ (ឡេកទោ)' },
-    '3': { char: '៣', code: 'Digit3', shift: false, name: '៣ (បី)' },
-    '#': { char: '"', code: 'Digit3', shift: true, name: '" (សញ្ញាសម្រង់)' },
-    '4': { char: '៤', code: 'Digit4', shift: false, name: '៤ (បួន)' },
-    '$': { char: '៛', code: 'Digit4', shift: true, name: '៛ (សញ្ញារៀល)' },
-    '5': { char: '៥', code: 'Digit5', shift: false, name: '៥ (ប្រាំ)' },
-    '%': { char: 'ៈ', code: 'Digit5', shift: true, name: 'ៈ (យុគលពិន្ទុ)' },
-    '6': { char: '៦', code: 'Digit6', shift: false, name: '៦ (ប្រាំមួយ)' },
-    '^': { char: '់', code: 'Digit6', shift: true, name: '់ (បន្តក់)' },
-    '7': { char: '៧', code: 'Digit7', shift: false, name: '៧ (ប្រាំពីរ)' },
-    '&': { char: '៏', code: 'Digit7', shift: true, name: '៏ (លេខអស្ដា)' },
-    '8': { char: '៨', code: 'Digit8', shift: false, name: '៨ (ប្រាំបី)' },
-    '*': { char: '៌', code: 'Digit8', shift: true, name: '៌ (សញ្ញាគformatting)' },
-    '9': { char: '៩', code: 'Digit9', shift: false, name: '៩ (ប្រាំបួន)' },
-    '(': { char: '៍', code: 'Digit9', shift: true, name: '៍ (ទណ្ឌឃាត)' },
-    '0': { char: '០', code: 'Digit0', shift: false, name: '០ (សូន្យ)' },
-    ')': { char: '័', code: 'Digit0', shift: true, name: '័ (សំយោគសញ្ញា)' },
-    '-': { char: 'ឥ', code: 'Minus', shift: false, name: 'ឥ (ស្រៈពេញតួ ឥ)' },
-    '_': { char: 'ឦ', code: 'Minus', shift: true, name: 'ឦ (ស្រៈពេញតួ ឦ)' },
-    '=': { char: 'ឰ', code: 'Equal', shift: false, name: 'ឰ (ស្រៈពេញតួ ឰ)' },
-    '+': { char: '=', code: 'Equal', shift: true, name: '= (សញ្ញាស្មើ)' },
-
-    // Row 2 (QWERTY Letters Top)
-    'q': { char: 'ឆ', code: 'KeyQ', shift: false, name: 'ឆ (ឆោ)' },
-    'Q': { char: 'ឈ', code: 'KeyQ', shift: true, name: 'ឈ (ឈើ)' },
-    'w': { char: 'ឹ', code: 'KeyW', shift: false, name: 'ឹ (ស្រៈ ឹ)' },
-    'W': { char: 'ឺ', code: 'KeyW', shift: true, name: 'ឺ (ស្រៈ ឺ)' },
-    'e': { char: 'េ', code: 'KeyE', shift: false, name: 'េ (ស្រៈ េ)' },
-    'E': { char: 'ែ', code: 'KeyE', shift: true, name: 'ែ (ស្រៈ ែ)' },
-    'r': { char: 'រ', code: 'KeyR', shift: false, name: 'រ (រកា)' },
-    'R': { char: 'ឬ', code: 'KeyR', shift: true, name: 'ឬ (ស្រៈពេញតួ ឬ)' },
-    't': { char: 'ត', code: 'KeyT', shift: false, name: 'ត (តា)' },
-    'T': { char: 'ទ', code: 'KeyT', shift: true, name: 'ទ (ទា)' },
-    'y': { char: 'យ', code: 'KeyY', shift: false, name: 'យ (យក្ស)' },
-    'Y': { char: 'ួ', code: 'KeyY', shift: true, name: 'ួ (ស្រៈ ួ)' },
-    'u': { char: 'ុ', code: 'KeyU', shift: false, name: 'ុ (ស្រៈ ុ)' },
-    'U': { char: 'ូ', code: 'KeyU', shift: true, name: 'ូ (ស្រៈ ូ)' },
-    'i': { char: 'ិ', code: 'KeyI', shift: false, name: 'ិ (ស្រៈ ិ)' },
-    'I': { char: 'ី', code: 'KeyI', shift: true, name: 'ី (ស្រៈ ី)' },
-    'o': { char: 'ោ', code: 'KeyO', shift: false, name: 'ោ (ស្រៈ ោ)' },
-    'O': { char: 'ៅ', code: 'KeyO', shift: true, name: 'ៅ (ស្រៈ ៅ)' },
-    'p': { char: 'ផ', code: 'KeyP', shift: false, name: 'ផ (ផែន)' },
-    'P': { char: 'ភ', code: 'KeyP', shift: true, name: 'ភ (ភ្នំ)' },
-    '[': { char: 'ៀ', code: 'BracketLeft', shift: false, name: 'ៀ (ស្រៈ ៀ)' },
-    '{': { char: 'ឿ', code: 'BracketLeft', shift: true, name: 'ឿ (ស្រៈ ឿ)' },
-    ']': { char: 'ឲ', code: 'BracketRight', shift: false, name: 'ឲ (ស្រៈពេញតួ ឲ)' },
-    '}': { char: 'ឱ', code: 'BracketRight', shift: true, name: 'ឱ (ស្រៈពេញតួ ឱ)' },
-    '\\': { char: 'ឮ', code: 'Backslash', shift: false, name: 'ឮ (ស្រៈពេញតួ ឮ)' },
-    '|': { char: 'ឡ', code: 'Backslash', shift: true, name: 'ឡ (ឡា)' },
-
-    // Row 3 (QWERTY Letters Home)
-    'a': { char: 'ា', code: 'KeyA', shift: false, name: 'ា (ស្រៈ ា)' },
-    'A': { char: 'ាំ', code: 'KeyA', shift: true, name: 'ាំ (ស្រៈ ាំ)' },
-    's': { char: 'ស', code: 'KeyS', shift: false, name: 'ស (សត្វ)' },
-    'S': { char: 'ៃ', code: 'KeyS', shift: true, name: 'ៃ (ស្រៈ ៃ)' },
-    'd': { char: 'ដ', code: 'KeyD', shift: false, name: 'ដ (ដំរី)' },
-    'D': { char: 'ឌ', code: 'KeyD', shift: true, name: 'ឌ (ឌី)' },
-    'f': { char: 'ថ', code: 'KeyF', shift: false, name: 'ថ (ថង់)' },
-    'F': { char: 'ធ', code: 'KeyF', shift: true, name: 'ធ (ធ្នូ)' },
-    'g': { char: 'ង', code: 'KeyG', shift: false, name: 'ង (ង៉ា)' },
-    'G': { char: 'អ', code: 'KeyG', shift: true, name: 'អ (អូន)' },
-    'h': { char: 'ហ', code: 'KeyH', shift: false, name: 'ហ (ហង្ស)' },
-    'H': { char: 'ះ', code: 'KeyH', shift: true, name: 'ះ (រះមុខ)' },
-    'j': { char: '្', code: 'KeyJ', shift: false, name: '្ (សញ្ញាជើង)' },
-    'J': { char: 'ញ', code: 'KeyJ', shift: true, name: 'ញ (ញញឹម)' },
-    'k': { char: 'ក', code: 'KeyK', shift: false, name: 'ក (ក្អែក)' },
-    'K': { char: 'គ', code: 'KeyK', shift: true, name: 'គ (គោក)' },
-    'l': { char: 'ល', code: 'KeyL', shift: false, name: 'ល (លលក)' },
-    'L': { char: 'ឡ', code: 'KeyL', shift: true, name: 'ឡ (ឡា)' },
-    ';': { char: 'ើ', code: 'Semicolon', shift: false, name: 'ើ (ស្រៈ ើ)' },
-    ':': { char: 'ោះ', code: 'Semicolon', shift: true, name: 'ោះ (ស្រៈ ោះ)' },
-    '\'': { char: '់', code: 'Quote', shift: false, name: '់ (បន្តក់)' },
-    '"': { char: '៉', code: 'Quote', shift: true, name: '៉ (មូសិកទន្ត)' },
-
-    // Row 4 (QWERTY Letters Bottom)
-    'z': { char: 'ឋ', code: 'KeyZ', shift: false, name: 'ឋ (ឋាន)' },
-    'Z': { char: 'ឍ', code: 'KeyZ', shift: true, name: 'ឍ (ឍី)' },
-    'x': { char: 'ខ', code: 'KeyX', shift: false, name: 'ខ (ខែ)' },
-    'X': { char: 'ឃ', code: 'KeyX', shift: true, name: 'ឃ (ឃ្មុំ)' },
-    'c': { char: 'ច', code: 'KeyC', shift: false, name: 'ច (ចាប)' },
-    'C': { char: 'ជ', code: 'KeyC', shift: true, name: 'ជ (ជើង)' },
-    'v': { char: 'វ', code: 'KeyV', shift: false, name: 'វ (វល្លិ)' },
-    'V': { char: 'េះ', code: 'KeyV', shift: true, name: 'េះ (ស្រៈ េះ)' },
-    'b': { char: 'ប', code: 'KeyB', shift: false, name: 'ប (បក្សី)' },
-    'B': { char: 'ព', code: 'KeyB', shift: true, name: 'ព (ពពក)' },
-    'n': { char: 'ន', code: 'KeyN', shift: false, name: 'ន (នាង)' },
-    'N': { char: 'ណ', code: 'KeyN', shift: true, name: 'ណ (ណី)' },
-    'm': { char: 'ម', code: 'KeyM', shift: false, name: 'ម (មាន់)' },
-    'M': { char: 'ំ', code: 'KeyM', shift: true, name: 'ំ (និគ្គហិត)' },
-    ',': { char: ',', code: 'Comma', shift: false, name: ', (ក្បៀស)' },
-    '<': { char: '<', code: 'Comma', shift: true, name: '< (តូចជាង)' },
-    '.': { char: '។', code: 'Period', shift: false, name: '។ (ខណ្ឌសញ្ញា)' },
-    '>': { char: '៕', code: 'Period', shift: true, name: '៕ (បរិយោសាន)' },
-    '/': { char: '៊', code: 'Slash', shift: false, name: '៊ (ត្រីសព្ទ)' },
-    '?': { char: '?', code: 'Slash', shift: true, name: '? (សញ្ញាសួរ)' },
-
-    // Special Spaces
-    ' ': { char: '\u200B', code: 'Space', shift: false, name: 'ដកឃ្លាមើលមិនឃើញ (ZWSP)' },
-    'ShiftSpace': { char: ' ', code: 'Space', shift: true, name: 'ដកឃ្លា (Space)' }
+    "q": { "normal": "ឆ", "shift": "ឈ", "altGr": "" },
+    "w": { "normal": "ឹ", "shift": "ឺ", "altGr": "" },
+    "e": { "normal": "េ", "shift": "ែ", "altGr": "ឯ" },
+    "r": { "normal": "រ", "shift": "ឬ", "altGr": "" },
+    "t": { "normal": "ត", "shift": "ទ", "altGr": "" },
+    "y": { "normal": "យ", "shift": "ួ", "altGr": "" },
+    "u": { "normal": "ុ", "shift": "ូ", "altGr": "" },
+    "i": { "normal": "ិ", "shift": "ី", "altGr": "ឦ" },
+    "o": { "normal": "ោ", "shift": "ៅ", "altGr": "ឱ" },
+    "p": { "normal": "ផ", "shift": "ភ", "altGr": "ឰ" },
+    "[": { "normal": "ៀ", "shift": "ឿ", "altGr": "ឩ" },
+    "]": { "normal": "ឪ", "shift": "ឧ", "altGr": "ឳ" },
+    "\\": { "normal": "ឮ", "shift": "ឭ", "altGr": "\\" },
+    "a": { "normal": "ា", "shift": "ាំ", "altGr": "" },
+    "s": { "normal": "ស", "shift": "ៃ", "altGr": "" },
+    "d": { "normal": "ដ", "shift": "ឌ", "altGr": "" },
+    "f": { "normal": "ថ", "shift": "ធ", "altGr": "" },
+    "g": { "normal": "ង", "shift": "អ", "altGr": "" },
+    "h": { "normal": "ហ", "shift": "ះ", "altGr": "" },
+    "j": { "normal": "្", "shift": "ញ", "altGr": "" },
+    "k": { "normal": "ក", "shift": "គ", "altGr": "" },
+    "l": { "normal": "ល", "shift": "ឡ", "altGr": "" },
+    ";": { "normal": "ើ", "shift": "ោះ", "altGr": "៖" },
+    "'": { "normal": "់", "shift": "៉", "altGr": "ៈ" },
+    "z": { "normal": "ឋ", "shift": "ឍ", "altGr": "" },
+    "x": { "normal": "ខ", "shift": "ឃ", "altGr": "" },
+    "c": { "normal": "ច", "shift": "ជ", "altGr": "" },
+    "v": { "normal": "វ", "shift": "េះ", "altGr": "" },
+    "b": { "normal": "ប", "shift": "ព", "altGr": "" },
+    "n": { "normal": "ន", "shift": "ណ", "altGr": "" },
+    "m": { "normal": "ម", "shift": "ំ", "altGr": "" },
+    ",": { "normal": "ុំ", "shift": "ុះ", "altGr": "," },
+    ".": { "normal": "។", "shift": "៕", "altGr": "" },
+    "/": { "normal": "៊", "shift": "?", "altGr": "/" },
+    "1": { "normal": "១", "shift": "!", "altGr": "" },
+    "2": { "normal": "២", "shift": "ៗ", "altGr": "" },
+    "3": { "normal": "៣", "shift": "៌", "altGr": "" },
+    "4": { "normal": "៤", "shift": "៍", "altGr": "៎" },
+    "5": { "normal": "៥", "shift": "ឺ", "altGr": "៩" },
+    "6": { "normal": "៦", "shift": "័", "altGr": "ៗ" },
+    "7": { "normal": "៧", "shift": "៏", "altGr": "៳" },
+    "8": { "normal": "៨", "shift": "ំ", "altGr": "៴" },
+    "9": { "normal": "៩", "shift": "់", "altGr": "៵" },
+    "0": { "normal": "០", "shift": "៌", "altGr": "៶" },
+    "-": { "normal": "ឥ", "shift": "ឱ", "altGr": "៷" },
+    "=": { "normal": "ឲ", "shift": "ឧ", "altGr": "៸" },
+    "space": { "normal": "\u200B", "shift": " ", "altGr": "" }
 };
 
 // Create a reverse mapping (Khmer character -> QWERTY keystroke info)
 const KHMER_TO_QWERTY = {};
 for (const [key, val] of Object.entries(KHMER_KEYMAP)) {
-    // Ensure we don't overwrite standard space mapping if we process ShiftSpace
-    if (key === 'ShiftSpace') {
-        KHMER_TO_QWERTY[' '] = val;
-    } else {
-        KHMER_TO_QWERTY[val.char] = {
-            qwerty: key,
-            code: val.code,
-            shift: val.shift,
-            name: val.name
-        };
-    }
+    let codeStr = 'Key' + key.toUpperCase();
+    if (key >= '0' && key <= '9') codeStr = 'Digit' + key;
+    if (key === 'space') codeStr = 'Space';
+
+    if (val.normal) KHMER_TO_QWERTY[val.normal] = { qwerty: key, code: codeStr, shift: false, name: val.normal };
+    if (val.shift) KHMER_TO_QWERTY[val.shift] = { qwerty: key, code: codeStr, shift: true, name: val.shift };
+    if (val.altGr) KHMER_TO_QWERTY[val.altGr] = { qwerty: key, code: codeStr, shift: false, altGr: true, name: val.altGr };
 }
 
-// Ensure Zero Width Space maps correctly to Spacebar without Shift
-KHMER_TO_QWERTY['\u200B'] = { qwerty: ' ', code: 'Space', shift: false, name: 'ដកឃ្លាមើលមិនឃើញ (ZWSP)' };
-// Explicitly define visible space mapping
-KHMER_TO_QWERTY[' '] = { qwerty: ' ', code: 'Space', shift: true, name: 'ដកឃ្លា (Space)' };
-
 // Add special combinations that output multiple codepoints (e.g. ាំ, េះ, ោះ)
-// Since the prompt strings might contain these precomposed or decomposed, we should support them!
 KHMER_TO_QWERTY['ាំ'] = { qwerty: 'A', code: 'KeyA', shift: true, name: 'ាំ (ស្រៈ ាំ)' };
 KHMER_TO_QWERTY['េះ'] = { qwerty: 'V', code: 'KeyV', shift: true, name: 'េះ (ស្រៈ េះ)' };
 KHMER_TO_QWERTY['ោះ'] = { qwerty: ':', code: 'Semicolon', shift: true, name: 'ោះ (ស្រៈ ោះ)' };
+
 
 
 // --- Game Content Pool (Lessons & Sentences) ---
@@ -181,7 +114,7 @@ const GAME_LESSONS = {
         "ប្រទេសកម្ពុជាល្បីល្បាញដោយសារវប្បធម៌ដ៏រុងរឿង។"
     ],
     endless: [
-        "ភាសាខ្មែរ", "ខ្មែរ", "អង្គរវត្ត", "ប្រាសាទ", "កម្ពុជា", "ភ្នំពេញ", "សន្តិភាព", "វប្បធម៌", 
+        "ភាសាខ្មែរ", "ខ្មែរ", "អង្គរវត្ត", "ប្រាសាទ", "កម្ពុជា", "ភ្នំពេញ", "សន្តិភាព", "វប្បធម៌",
         "អរិយធម៌", "សាលារៀន", "មិត្តភក្តិ", "គ្រួសារ", "សៀវភៅ", "ប៊ិច", "កុំព្យូទ័រ", "ហ្គេម"
     ]
 };
@@ -244,7 +177,7 @@ class AudioSynth {
     playSuccess() {
         if (!this.enabled) return;
         this.init();
-        
+
         // Short double tone chime
         const playTone = (freq, time, duration) => {
             const osc = this.ctx.createOscillator();
@@ -270,7 +203,7 @@ class AudioSynth {
     playDefeat() {
         if (!this.enabled) return;
         this.init();
-        
+
         const now = this.ctx.currentTime;
         const playTone = (freq, start, duration) => {
             const osc = this.ctx.createOscillator();
@@ -305,10 +238,10 @@ class TypingAdventureGame {
         this.startTime = null;
         this.timerInterval = null;
         this.elapsedSeconds = 0;
-        
+
         // Game state
         this.isPaused = false;
-        
+
         // Lesson state
         this.currentLesson = 'words';
         this.currentText = "";
@@ -345,7 +278,7 @@ class TypingAdventureGame {
             typingText: document.getElementById('typing-text'),
             nextCharHint: document.getElementById('next-char-hint'),
             keyboard: document.getElementById('virtual-keyboard'),
-            
+
             // Pause overlay elements
             pauseOverlay: document.getElementById('pause-overlay'),
             pauseToggleKeyboard: document.getElementById('pause-toggle-keyboard'),
@@ -360,7 +293,7 @@ class TypingAdventureGame {
         this.dom.btnRestart.addEventListener('click', () => this.restartGame());
         this.dom.btnSound.addEventListener('click', () => this.toggleSound());
         this.dom.btnKeyboardToggle.addEventListener('click', () => this.toggleKeyboard());
-        
+
         // Bind pause overlay events
         this.dom.pauseToggleKeyboard.addEventListener('change', (e) => this.setKeyboardVisibility(e.target.checked));
         this.dom.pauseToggleSound.addEventListener('change', (e) => this.setSoundEnabled(e.target.checked));
@@ -373,13 +306,16 @@ class TypingAdventureGame {
             this.restartGame();
             this.resumeGame();
         });
-        
+
         // Handle physical keyboard inputs
         window.addEventListener('keydown', (e) => this.handleKeyDown(e));
         window.addEventListener('keyup', (e) => this.handleKeyUp(e));
 
         // Setup Virtual Keyboard click events
         this.setupVirtualKeyboardClicks();
+
+        // Dynamically update virtual keyboard labels to match KHMER_KEYMAP
+        this.updateVirtualKeyboardLabels();
 
         // Parallax background speed control
         this.isRunnerActive = true;
@@ -390,6 +326,43 @@ class TypingAdventureGame {
         this.restartStats();
     }
 
+    updateVirtualKeyboardLabels() {
+        for (const [key, mapInfo] of Object.entries(KHMER_KEYMAP)) {
+            if (key === 'space') continue;
+            let codeStr = 'Key' + key.toUpperCase();
+            if (key >= '0' && key <= '9') codeStr = 'Digit' + key;
+            if (key === '-') codeStr = 'Minus';
+            if (key === '=') codeStr = 'Equal';
+            if (key === '[') codeStr = 'BracketLeft';
+            if (key === ']') codeStr = 'BracketRight';
+            if (key === '\\') codeStr = 'Backslash';
+            if (key === ';') codeStr = 'Semicolon';
+            if (key === '\'') codeStr = 'Quote';
+            if (key === ',') codeStr = 'Comma';
+            if (key === '.') codeStr = 'Period';
+            if (key === '/') codeStr = 'Slash';
+            
+            const keyEl = document.getElementById(codeStr);
+            if (keyEl) {
+                const normalEl = keyEl.querySelector('.key-bottom-right.purple');
+                const shiftEl = keyEl.querySelector('.key-top-right.purple');
+                const altGrEl = keyEl.querySelector('.key-top-left');
+                
+                if (normalEl) normalEl.innerText = mapInfo.normal;
+                if (shiftEl) shiftEl.innerText = mapInfo.shift;
+                
+                if (altGrEl) {
+                    if (mapInfo.altGr) {
+                        altGrEl.innerText = mapInfo.altGr;
+                        altGrEl.classList.add('purple');
+                    } else {
+                        altGrEl.innerText = "";
+                    }
+                }
+            }
+        }
+    }
+
     restartStats() {
         this.score = 0;
         this.correctCharsTyped = 0;
@@ -398,7 +371,7 @@ class TypingAdventureGame {
         this.incorrectKeyPressCount = 0;
         this.elapsedSeconds = 0;
         this.startTime = null;
-        
+
         if (this.timerInterval) {
             clearInterval(this.timerInterval);
             this.timerInterval = null;
@@ -411,13 +384,13 @@ class TypingAdventureGame {
         this.isPaused = false;
         this.dom.pauseOverlay.classList.add('hide');
         this.restartStats();
-        
+
         // Cancel obstacle loop
         if (this.obstacleFrameId) {
             cancelAnimationFrame(this.obstacleFrameId);
             this.obstacleFrameId = null;
         }
-        
+
         // Clear active and crumbling obstacle elements from DOM
         if (this.activeObstacles) {
             this.activeObstacles.forEach(o => {
@@ -493,22 +466,22 @@ class TypingAdventureGame {
     pauseGame() {
         if (this.isPaused) return;
         this.isPaused = true;
-        
+
         // Stop timer
         if (this.timerInterval) {
             clearInterval(this.timerInterval);
             this.timerInterval = null;
         }
-        
+
         // Cancel obstacle loop
         if (this.obstacleFrameId) {
             cancelAnimationFrame(this.obstacleFrameId);
             this.obstacleFrameId = null;
         }
-        
+
         // Pause running animations
         this.pauseRunnerAnimations();
-        
+
         // Show pause overlay
         this.dom.pauseOverlay.classList.remove('hide');
     }
@@ -516,7 +489,7 @@ class TypingAdventureGame {
     resumeGame() {
         if (!this.isPaused) return;
         this.isPaused = false;
-        
+
         // Resume timer if game was already started
         if (this.startTime) {
             this.startTime = Date.now() - (this.elapsedSeconds * 1000);
@@ -525,16 +498,16 @@ class TypingAdventureGame {
                 this.updateStatsDisplay();
             }, 1000);
         }
-        
+
         // Resume running animations
         this.resumeRunnerAnimations();
-        
+
         // Resume obstacle loop if consonants level
         if (this.currentLesson === 'consonants') {
             if (this.obstacleFrameId) cancelAnimationFrame(this.obstacleFrameId);
             this.obstacleFrameId = requestAnimationFrame(() => this.obstacleUpdateLoop());
         }
-        
+
         // Hide pause overlay
         this.dom.pauseOverlay.classList.add('hide');
     }
@@ -556,7 +529,7 @@ class TypingAdventureGame {
 
         const pool = GAME_LESSONS[this.currentLesson];
         let text = "";
-        
+
         if (this.currentLesson === 'endless') {
             // Endless mode compiles 4 random words separated by ZWSP
             const words = [];
@@ -731,7 +704,7 @@ class TypingAdventureGame {
     handleObstacleMiss(target) {
         this.incorrectKeyPressCount++;
         this.score = Math.max(0, this.score - 5);
-        
+
         synth.playError();
         this.triggerPlayerDamage();
 
@@ -759,7 +732,7 @@ class TypingAdventureGame {
         // We want to highlight character-by-character based on typedIndex.
         // We will build the HTML string directly.
         let html = "";
-        
+
         for (let i = 0; i < this.textCodepoints.length; i++) {
             const char = this.textCodepoints[i];
             let classStr = "";
@@ -851,8 +824,8 @@ class TypingAdventureGame {
             const totalAttempts = this.correctCharsTyped + this.incorrectKeyPressCount;
             accuracyVal = totalAttempts > 0 ? Math.round((this.correctCharsTyped / totalAttempts) * 100) : 100;
         } else {
-            accuracyVal = this.totalCharsTyped > 0 
-                ? Math.round((this.correctCharsTyped / this.totalCharsTyped) * 100) 
+            accuracyVal = this.totalCharsTyped > 0
+                ? Math.round((this.correctCharsTyped / this.totalCharsTyped) * 100)
                 : 100;
         }
         this.dom.accuracy.innerText = `${accuracyVal}%`;
@@ -931,31 +904,64 @@ class TypingAdventureGame {
 
         // Determine typed character based on QWERTY layout key mapping
         let typedChar = "";
-        
-        // Translate Space inputs: ZWSP vs visible space
-        if (e.code === 'Space') {
-            typedChar = e.shiftKey ? ' ' : '\u200B';
-        } else {
-            // Find key character mapping
-            let physicalKey = e.key;
-            // Map standard keys
-            const mapInfo = KHMER_KEYMAP[physicalKey];
-            if (mapInfo) {
-                typedChar = mapInfo.char;
+
+        let physicalKey = e.key.toLowerCase();
+        if (e.code === 'Space') physicalKey = 'space';
+
+        const mapInfo = KHMER_KEYMAP[physicalKey];
+        if (mapInfo) {
+            if (e.altKey && mapInfo.altGr) {
+                typedChar = mapInfo.altGr;
+            } else if (e.shiftKey && mapInfo.shift) {
+                typedChar = mapInfo.shift;
             } else {
-                // Try fallback QWERTY translation (when OS layout is already set to Khmer)
-                // If they type Khmer directly, e.key is already Khmer character!
-                typedChar = e.key;
+                typedChar = mapInfo.normal;
             }
+        } else {
+            // Try fallback QWERTY translation
+            typedChar = e.key;
         }
 
         // Validate character typed against current index
         const expectedChar = this.textCodepoints[this.typedIndex];
-        
+
+        // --- VISUAL FEEDBACK LOGIC ---
+        if (typedChar && typedChar !== ' ' && typedChar !== '\u200B') {
+            const feedbackBox = document.getElementById('stat-last-pressed');
+            const feedbackChar = document.getElementById('last-pressed-char');
+            if (feedbackBox && feedbackChar) {
+                feedbackChar.innerText = typedChar;
+                feedbackBox.style.borderColor = '#00e5ff';
+                feedbackBox.style.color = '#00e5ff';
+            }
+        }
+
         if (typedChar === expectedChar || e.key === expectedChar) {
+            if (keyEl) {
+                keyEl.classList.add('glow-correct');
+                setTimeout(() => keyEl.classList.remove('glow-correct'), 300);
+            }
             this.processCorrectKeystroke();
         } else {
+            if (keyEl) {
+                keyEl.classList.add('glow-incorrect');
+                setTimeout(() => keyEl.classList.remove('glow-incorrect'), 300);
+            }
             this.processIncorrectKeystroke();
+
+            if (typedChar && typedChar !== ' ' && typedChar !== '\u200B') {
+                const feedbackBox = document.getElementById('stat-last-pressed');
+                if (feedbackBox) {
+                    feedbackBox.style.borderColor = '#ff3333';
+                    feedbackBox.style.color = '#ff3333';
+                    setTimeout(() => {
+                        if (feedbackBox.style.borderColor === 'rgb(255, 51, 51)' || feedbackBox.style.borderColor === '#ff3333') {
+                            feedbackBox.style.borderColor = '#00e5ff';
+                            feedbackBox.style.color = '#00e5ff';
+                        }
+                    }, 400);
+                }
+            }
         }
     }
 
@@ -978,11 +984,11 @@ class TypingAdventureGame {
     processCorrectKeystroke() {
         this.correctCharsTyped++;
         this.typedIndex++;
-        
+
         if (this.currentLesson === 'consonants') {
             this.score += 15;
             synth.playClick();
-            
+
             // Trigger correct explorer action based on obstacle type
             if (this.obstacleType === 'sentinel') {
                 this.triggerExplorerAction('attack');
@@ -1006,7 +1012,7 @@ class TypingAdventureGame {
             if (this.consonantProgress >= this.consonantTarget) {
                 synth.playSuccess();
                 this.clearKeyHighlights();
-                
+
                 // Clear remaining obstacles
                 this.activeObstacles.forEach(o => {
                     if (o.el && o.el.parentNode) o.el.parentNode.removeChild(o.el);
@@ -1032,15 +1038,15 @@ class TypingAdventureGame {
         }
 
         this.score += 10;
-        
+
         synth.playClick();
         this.renderPromptSlab();
 
         // Jump Explorer on typing vowels/combining signs, jump/attack on consonants
         const char = this.textCodepoints[this.typedIndex - 1];
-        if (['ក','ខ','គ','ឃ','ង','ច','ឆ','ជ','ឈ','ញ','ដ','ឋ','ឌ','ឍ','ណ','ត','ថ','ទ','ធ','ន','ប','ផ','ព','ភ','ម','យ','រ','ល','វ','ស','ហ','ឡ','អ'].includes(char)) {
+        if (['ក', 'ខ', 'គ', 'ឃ', 'ង', 'ច', 'ឆ', 'ជ', 'ឈ', 'ញ', 'ដ', 'ឋ', 'ឌ', 'ឍ', 'ណ', 'ត', 'ថ', 'ទ', 'ធ', 'ន', 'ប', 'ផ', 'ព', 'ភ', 'ម', 'យ', 'រ', 'ល', 'វ', 'ស', 'ហ', 'ឡ', 'អ'].includes(char)) {
             this.triggerExplorerAction('attack');
-        } else if (['ា','ិ','ី','ឹ','ឺ','ុ','ូ','ួ','ើ','ឿ','ៀ','េ','ែ','ៃ','ោ','ៅ','្','់','ំ','ះ'].includes(char)) {
+        } else if (['ា', 'ិ', 'ី', 'ឹ', 'ឺ', 'ុ', 'ូ', 'ួ', 'ើ', 'ឿ', 'ៀ', 'េ', 'ែ', 'ៃ', 'ោ', 'ៅ', '្', '់', 'ំ', 'ះ'].includes(char)) {
             this.triggerExplorerAction('jump');
         }
 
@@ -1057,9 +1063,9 @@ class TypingAdventureGame {
         this.errorsCount++;
         this.incorrectKeyPressCount++; // Increment target error counter
         this.score = Math.max(0, this.score - 5);
-        
+
         synth.playError();
-        
+
         if (this.currentLesson === 'consonants') {
             this.triggerPlayerDamage();
 
@@ -1093,11 +1099,11 @@ class TypingAdventureGame {
         this.score += 100; // Bonus points for completion
         this.updateStatsDisplay();
         this.clearKeyHighlights();
-        
+
         // Defeat monster animation
         this.dom.monster.classList.add('crumble');
         this.pauseRunnerAnimations();
-        
+
         synth.playSuccess();
 
         setTimeout(() => {
@@ -1111,7 +1117,7 @@ class TypingAdventureGame {
         // Force reflow
         void this.dom.explorer.offsetWidth;
         this.dom.explorer.classList.add(action);
-        
+
         const duration = action === 'stumble' ? 700 : 500;
         setTimeout(() => {
             this.dom.explorer.classList.remove(action);
@@ -1144,7 +1150,7 @@ class TypingAdventureGame {
                     code: keyId,
                     key: "",
                     shiftKey: this.dom.keyboard.classList.contains('shift-active'),
-                    preventDefault: () => {},
+                    preventDefault: () => { },
                     target: document.body
                 };
 
