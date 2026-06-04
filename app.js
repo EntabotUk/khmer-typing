@@ -38,14 +38,14 @@ const KHMER_KEYMAP = {
     "2": { "normal": "២", "shift": "ៗ", "altGr": "" },
     "3": { "normal": "៣", "shift": '"', "altGr": "" },
     "4": { "normal": "៤", "shift": "៛", "altGr": "៎" },
-    "5": { "normal": "៥", "shift": "ឺ", "altGr": "៩" },
-    "6": { "normal": "៦", "shift": "័", "altGr": "ៗ" },
-    "7": { "normal": "៧", "shift": "៏", "altGr": "៳" },
-    "8": { "normal": "៨", "shift": "ំ", "altGr": "៴" },
-    "9": { "normal": "៩", "shift": "់", "altGr": "៵" },
-    "0": { "normal": "០", "shift": ")", "altGr": "៶" },
-    "-": { "normal": "ឥ", "shift": "៌", "altGr": "៷" },
-    "=": { "normal": "ឲ", "shift": "=", "altGr": "៸" },
+    "5": { "normal": "៥", "shift": "%", "altGr": "€" },
+    "6": { "normal": "៦", "shift": "៍", "altGr": "៙" },
+    "7": { "normal": "៧", "shift": "័", "altGr": "៚" },
+    "8": { "normal": "៨", "shift": "៏", "altGr": "*" },
+    "9": { "normal": "៩", "shift": "(", "altGr": "{" },
+    "0": { "normal": "០", "shift": ")", "altGr": "}" },
+    "-": { "normal": "ឥ", "shift": "៌", "altGr": "×" },
+    "=": { "normal": "ឲ", "shift": "=", "altGr": "៎" },
     "space": { "normal": "\u200B", "shift": " ", "altGr": "" }
 };
 
@@ -258,7 +258,18 @@ class TypingAdventureGame {
             pauseToggleSound: document.getElementById('pause-toggle-sound'),
             pauseLevelSelect: document.getElementById('pause-level-select'),
             pauseBtnResume: document.getElementById('pause-btn-resume'),
-            pauseBtnRestart: document.getElementById('pause-btn-restart')
+            pauseBtnRestart: document.getElementById('pause-btn-restart'),
+            launchOverlay: document.getElementById('launch-menu-overlay'),
+            launchLevelSelect: document.getElementById('launch-level-select'),
+            launchBtnStart: document.getElementById('launch-btn-start'),
+            levelCompleteOverlay: document.getElementById('level-complete-overlay'),
+            completeScore: document.getElementById('complete-score'),
+            completeWpm: document.getElementById('complete-wpm'),
+            completeErrors: document.getElementById('complete-errors'),
+            completeAccuracy: document.getElementById('complete-accuracy'),
+            completeLevelSelect: document.getElementById('complete-level-select'),
+            btnRestartLesson: document.getElementById('btn-restart-lesson'),
+            btnNextLesson: document.getElementById('btn-next-lesson')
         };
 
         // Bind events
@@ -295,8 +306,61 @@ class TypingAdventureGame {
     }
 
     init() {
-        this.changeLesson(this.dom.levelSelect.value);
+        // Boot directly into paused launch menu state
+        this.isPaused = true;
+        this.pauseRunnerAnimations();
+        this.dom.launchOverlay.classList.remove('hide');
         this.restartStats();
+        
+        // Start Game Button Handler
+        this.dom.launchBtnStart.addEventListener('click', () => {
+            this.dom.launchOverlay.classList.add('hide');
+            const selectedLesson = this.dom.launchLevelSelect.value;
+            
+            // Sync all dropdowns and init level
+            this.dom.levelSelect.value = selectedLesson;
+            this.dom.pauseLevelSelect.value = selectedLesson;
+            this.changeLesson(selectedLesson);
+            
+            this.isPaused = false;
+            this.resumeGame();
+        });
+        
+        // Level Complete Buttons
+        this.dom.btnRestartLesson.addEventListener('click', () => {
+            this.dom.levelCompleteOverlay.classList.add('hide');
+            this.restartGame();
+            this.resumeGame();
+        });
+        
+        this.dom.btnNextLesson.addEventListener('click', () => {
+            this.dom.levelCompleteOverlay.classList.add('hide');
+            const select = this.dom.launchLevelSelect;
+            if (select.selectedIndex < select.options.length - 1) {
+                select.selectedIndex++;
+            } else {
+                select.selectedIndex = 0; // Wrap around to start if it's the last lesson
+            }
+            const nextLesson = select.value;
+            this.dom.levelSelect.value = nextLesson;
+            this.dom.pauseLevelSelect.value = nextLesson;
+            this.dom.completeLevelSelect.value = nextLesson;
+            this.changeLesson(nextLesson);
+            this.resumeGame();
+        });
+        
+        // Change lesson from the complete menu dropdown
+        this.dom.completeLevelSelect.addEventListener('change', (e) => {
+            const selectedLesson = e.target.value;
+            this.dom.levelSelect.value = selectedLesson;
+            this.dom.pauseLevelSelect.value = selectedLesson;
+            this.dom.launchLevelSelect.value = selectedLesson;
+            this.changeLesson(selectedLesson);
+            
+            this.dom.levelCompleteOverlay.classList.add('hide');
+            this.isPaused = false;
+            this.resumeGame();
+        });
     }
 
     updateVirtualKeyboardLabels() {
@@ -592,6 +656,9 @@ class TypingAdventureGame {
         if (this.activeObstacles.length > 0 && this.typedIndex < this.activeObstacles.length) {
             const target = this.activeObstacles[this.typedIndex];
 
+            // Ensure no CSS transitions fight with frame-by-frame sliding
+            target.el.style.transition = 'none';
+
             if (target.isBouncing) {
                 target.x += 15.0; // move quickly back
                 if (target.x >= 500) {
@@ -635,6 +702,21 @@ class TypingAdventureGame {
 
         this.updateStatsDisplay();
     }
+    
+    showLevelCompleteScreen() {
+        this.isPaused = true;
+        this.pauseRunnerAnimations();
+        clearInterval(this.timerInterval);
+        
+        synth.playSuccess();
+        
+        // Populate final stats
+        this.dom.completeScore.innerText = this.score;
+        this.dom.completeWpm.innerText = this.dom.wpm.innerText;
+        this.dom.completeAccuracy.innerText = this.dom.accuracy.innerText;
+        
+        this.dom.levelCompleteOverlay.classList.remove('hide');
+    }
 
     triggerPlayerDamage() {
         this.dom.explorer.classList.remove('jump', 'attack', 'smash', 'stumble', 'flash-red');
@@ -674,6 +756,20 @@ class TypingAdventureGame {
         }
 
         this.dom.typingText.innerHTML = html;
+        
+        // After DOM update, slide the track to center the active target
+        setTimeout(() => {
+            const currentEl = this.dom.typingText.querySelector('.char-current');
+            const slabWidth = this.dom.typingText.parentElement.offsetWidth;
+            
+            if (currentEl) {
+                // Calculate exact offset to place the center of the active char in the center of the slab
+                const centerOffset = (slabWidth / 2) - currentEl.offsetLeft - (currentEl.offsetWidth / 2);
+                this.dom.typingText.style.transform = `translateX(${centerOffset}px)`;
+            } else if (this.typedIndex === 0) {
+                this.dom.typingText.style.transform = `translateX(${slabWidth / 2 - 15}px)`;
+            }
+        }, 0);
     }
 
     // Show hints for key combinations
@@ -763,12 +859,8 @@ class TypingAdventureGame {
 
         // Progress Bar
         let progressPercent = 0;
-        if (this.currentLesson === 'consonants') {
-            progressPercent = Math.max(0, Math.min(100, Math.round((this.consonantProgress / this.consonantTarget) * 100)));
-        } else {
-            progressPercent = this.textCodepoints.length > 0
-                ? Math.round((this.typedIndex / this.textCodepoints.length) * 100)
-                : 0;
+        if (this.textCodepoints && this.textCodepoints.length > 0) {
+            progressPercent = Math.round((this.typedIndex / this.textCodepoints.length) * 100);
         }
         this.dom.progressBarText.innerText = `${progressPercent}%`;
         this.dom.progressBarFill.style.width = `${progressPercent}%`;
@@ -917,10 +1009,11 @@ class TypingAdventureGame {
                     this.triggerExplorerAction(target.type === 'sentinel' ? 'attack' : 'smash');
                 }
 
-                // Shift the remaining queue forward by 150px since the obstacle was completed
+                // Shift the remaining queue forward by 150px smoothly
                 for (let i = this.typedIndex; i < this.activeObstacles.length; i++) {
                     const o = this.activeObstacles[i];
                     o.x -= 150;
+                    o.el.style.transition = 'left 0.4s cubic-bezier(0.2, 0.8, 0.2, 1)';
                     o.el.style.left = `${o.x}px`;
                 }
             } else {
@@ -936,9 +1029,8 @@ class TypingAdventureGame {
             }
         }
 
-        // Calculate progress and end text
         if (this.typedIndex >= this.textCodepoints.length) {
-            this.processTextCompletion();
+            this.showLevelCompleteScreen();
         } else {
             this.updateNextCharacterHint();
             this.updateStatsDisplay();
@@ -980,29 +1072,26 @@ class TypingAdventureGame {
         this.updateStatsDisplay();
     }
 
-    processTextCompletion() {
-        this.score += 100; // Bonus points for completion
-        this.updateStatsDisplay();
-        this.clearKeyHighlights();
-
+    showLevelCompleteScreen() {
+        this.isPaused = true;
         this.pauseRunnerAnimations();
+        clearInterval(this.timerInterval);
+        
         synth.playSuccess();
-
-        if (this.currentLesson === 'consonants') {
-            this.dom.nextCharHint.innerHTML = "អបអរសាទរ! Level 1 Completed! 🎉";
-            setTimeout(() => {
-                this.changeLesson('vowels'); // auto progress to vowels
-            }, 1500);
-        } else {
-            // Defeat monster animation
-            if (this.dom.monster) {
-                this.dom.monster.classList.add('crumble');
-            }
-            setTimeout(() => {
-                this.loadNextText();
-                this.resumeRunnerAnimations();
-            }, 1200);
-        }
+        
+        // Populate final stats
+        this.dom.completeScore.innerText = this.score;
+        this.dom.completeWpm.innerText = this.dom.wpm.innerText;
+        this.dom.completeErrors.innerText = this.dom.errors ? this.dom.errors.innerText : this.errorsCount;
+        this.dom.completeAccuracy.innerText = this.dom.accuracy.innerText;
+        
+        // Sync next lesson dropdown
+        const select = this.dom.launchLevelSelect;
+        let nextIndex = select.selectedIndex + 1;
+        if (nextIndex >= select.options.length) nextIndex = 0;
+        this.dom.completeLevelSelect.selectedIndex = nextIndex;
+        
+        this.dom.levelCompleteOverlay.classList.remove('hide');
     }
 
     triggerExplorerAction(action) {

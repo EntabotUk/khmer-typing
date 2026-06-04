@@ -426,6 +426,80 @@
             </div>
         </footer>
 
+        <!-- Launch Menu Overlay -->
+        <div class="pause-overlay" id="launch-menu-overlay">
+            <div class="pause-menu-box" style="text-align: center;">
+                <h2 class="pause-title">Khmer Typing Adventure</h2>
+                
+                <div class="pause-settings" style="margin-top: 30px;">
+                    <div style="color: #ff5252; font-weight: bold; margin-bottom: 20px; font-size: 0.9rem;">
+                        ⚠ Please switch your system keyboard input method configuration to the Khmer Unicode (NIDA) layout standard before beginning.
+                    </div>
+                    
+                    <div class="setting-row">
+                        <span class="setting-label">មេរៀន / Lesson Select</span>
+                        <select class="pause-select" id="launch-level-select">
+                            <option value="consonants" selected>ព្យញ្ជនៈគ្រឹះ / Basic Consonants (ក - អ)</option>
+                            <option value="vowels">ស្រៈនិស្ស័យ / Dependent Vowels (ា - ៅ)</option>
+                            <option value="subscripts">ជើងព្យញ្ជនៈ / Consonant Subscripts (ខ្មែរ, ភ្នំពេញ)</option>
+                            <option value="words">ពាក្យទូទៅ / Common Words</option>
+                            <option value="sentences">ប្រយោគ / Complete Sentences</option>
+                            <option value="endless">ផ្សងព្រេងគ្មានទីបញ្ចប់ / Endless Adventure</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="pause-buttons" style="justify-content: center; margin-top: 30px;">
+                    <button class="pause-btn resume" id="launch-btn-start" style="width: 100%;">Start Game</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Level Complete Overlay -->
+        <div class="pause-overlay hide" id="level-complete-overlay">
+            <div class="pause-menu-box" style="text-align: center;">
+                <h2 class="pause-title" style="color: #4aeb6b;">មេរៀនបានបញ្ចប់!</h2>
+                <div class="pause-subtitle">LESSON COMPLETE</div>
+                
+                <div class="pause-settings" style="margin-top: 30px;">
+                    <div style="display: flex; justify-content: space-around; text-align: center; margin-bottom: 20px;">
+                        <div>
+                            <div style="font-size: 0.8rem; color: var(--text-muted);">SCORE</div>
+                            <div id="complete-score" style="font-size: 2rem; font-weight: bold; color: var(--accent-gold);">0</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 0.8rem; color: var(--text-muted);">WPM</div>
+                            <div id="complete-wpm" style="font-size: 2rem; font-weight: bold; color: var(--primary-cyan);">0</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 0.8rem; color: var(--text-muted);">ERRORS</div>
+                            <div id="complete-errors" style="font-size: 2rem; font-weight: bold; color: #ff5252;">0</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 0.8rem; color: var(--text-muted);">ACCURACY</div>
+                            <div id="complete-accuracy" style="font-size: 2rem; font-weight: bold; color: #4aeb6b;">100%</div>
+                        </div>
+                    </div>
+
+                    <div class="setting-row" style="margin-top: 20px;">
+                        <span class="setting-label">មេរៀនបន្ទាប់ / Select Next Lesson</span>
+                        <select class="pause-select" id="complete-level-select">
+                            <option value="consonants">ព្យញ្ជនៈគ្រឹះ / Basic Consonants (ក - អ)</option>
+                            <option value="vowels">ស្រៈនិស្ស័យ / Dependent Vowels (ា - ៅ)</option>
+                            <option value="subscripts">ជើងព្យញ្ជនៈ / Consonant Subscripts (ខ្មែរ, ភ្នំពេញ)</option>
+                            <option value="words">ពាក្យទូទៅ / Common Words</option>
+                            <option value="sentences">ប្រយោគ / Complete Sentences</option>
+                            <option value="endless">ផ្សងព្រេងគ្មានទីបញ្ចប់ / Endless Adventure</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="pause-buttons" style="justify-content: center; margin-top: 30px; gap: 15px;">
+                    <button class="pause-btn restart" id="btn-restart-lesson">Restart</button>
+                    <button class="pause-btn resume" id="btn-next-lesson">Next Lesson</button>
+                </div>
+            </div>
+        </div>
+
         <!-- Pause Screen Overlay Modal -->
         <div class="pause-overlay hide" id="pause-overlay">
             <div class="pause-menu-box">
