@@ -55,6 +55,16 @@ for (const [key, val] of Object.entries(KHMER_KEYMAP)) {
     let codeStr = 'Key' + key.toUpperCase();
     if (key >= '0' && key <= '9') codeStr = 'Digit' + key;
     if (key === 'space') codeStr = 'Space';
+    if (key === '-') codeStr = 'Minus';
+    if (key === '=') codeStr = 'Equal';
+    if (key === '[') codeStr = 'BracketLeft';
+    if (key === ']') codeStr = 'BracketRight';
+    if (key === '\\') codeStr = 'Backslash';
+    if (key === ';') codeStr = 'Semicolon';
+    if (key === '\'') codeStr = 'Quote';
+    if (key === ',') codeStr = 'Comma';
+    if (key === '.') codeStr = 'Period';
+    if (key === '/') codeStr = 'Slash';
 
     if (val.normal) KHMER_TO_QWERTY[val.normal] = { qwerty: key, code: codeStr, shift: false, name: val.normal };
     if (val.shift) KHMER_TO_QWERTY[val.shift] = { qwerty: key, code: codeStr, shift: true, name: val.shift };
@@ -74,10 +84,7 @@ const GAME_LESSONS = {
         "កខគឃងចឆជឈញដឋឌឍណតថទធនបផពភមយរលវសហឡអ"
     ],
     vowels: [
-        "កាកិកីកឹកឺកុកូកួ",
-        "កើកឿកៀកេកែកៃកោកៅ",
-        "ចាចិជីចឹជឺចុចូចួ",
-        "ទាទិទីទឹទឺទុទូទួ"
+        "ាិីឹឺុូួើឿៀេែៃោៅុំំាំះុះេះោះឥឦឧឱឲឩឪឬឮឭ័៍៏៌៏៌័៖ៗៈ()៕!"
     ],
     subscripts: [
         "ខ្មែរ",
@@ -311,28 +318,28 @@ class TypingAdventureGame {
         this.pauseRunnerAnimations();
         this.dom.launchOverlay.classList.remove('hide');
         this.restartStats();
-        
+
         // Start Game Button Handler
         this.dom.launchBtnStart.addEventListener('click', () => {
             this.dom.launchOverlay.classList.add('hide');
             const selectedLesson = this.dom.launchLevelSelect.value;
-            
+
             // Sync all dropdowns and init level
             this.dom.levelSelect.value = selectedLesson;
             this.dom.pauseLevelSelect.value = selectedLesson;
             this.changeLesson(selectedLesson);
-            
+
             this.isPaused = false;
             this.resumeGame();
         });
-        
+
         // Level Complete Buttons
         this.dom.btnRestartLesson.addEventListener('click', () => {
             this.dom.levelCompleteOverlay.classList.add('hide');
             this.restartGame();
             this.resumeGame();
         });
-        
+
         this.dom.btnNextLesson.addEventListener('click', () => {
             this.dom.levelCompleteOverlay.classList.add('hide');
             const select = this.dom.launchLevelSelect;
@@ -348,7 +355,7 @@ class TypingAdventureGame {
             this.changeLesson(nextLesson);
             this.resumeGame();
         });
-        
+
         // Change lesson from the complete menu dropdown
         this.dom.completeLevelSelect.addEventListener('change', (e) => {
             const selectedLesson = e.target.value;
@@ -356,14 +363,14 @@ class TypingAdventureGame {
             this.dom.pauseLevelSelect.value = selectedLesson;
             this.dom.launchLevelSelect.value = selectedLesson;
             this.changeLesson(selectedLesson);
-            
+
             this.dom.levelCompleteOverlay.classList.add('hide');
             this.isPaused = false;
             this.resumeGame();
         });
     }
 
-    updateVirtualKeyboardLabels() {
+    updateVirtualKeyboardLabels(isAltGrActive = false) {
         for (const [key, mapInfo] of Object.entries(KHMER_KEYMAP)) {
             if (key === 'space') continue;
             let codeStr = 'Key' + key.toUpperCase();
@@ -384,16 +391,57 @@ class TypingAdventureGame {
                 const normalEl = keyEl.querySelector('.key-bottom-right.purple');
                 const shiftEl = keyEl.querySelector('.key-top-right.purple');
                 const altGrEl = keyEl.querySelector('.key-top-left');
+                const englishEl = keyEl.querySelector('.key-bottom-left');
 
-                if (normalEl) normalEl.innerText = mapInfo.normal;
-                if (shiftEl) shiftEl.innerText = mapInfo.shift;
-
-                if (altGrEl) {
-                    if (mapInfo.altGr) {
-                        altGrEl.innerText = mapInfo.altGr;
-                        altGrEl.classList.add('purple');
-                    } else {
-                        altGrEl.innerText = "";
+                if (isAltGrActive) {
+                    if (normalEl) normalEl.innerText = "";
+                    if (shiftEl) shiftEl.innerText = "";
+                    if (englishEl) englishEl.innerText = "";
+                    if (altGrEl) {
+                        if (mapInfo.altGr) {
+                            altGrEl.innerText = mapInfo.altGr;
+                            altGrEl.classList.add('purple');
+                            // Scale and center the active AltGr symbol
+                            altGrEl.style.fontSize = '1.75rem';
+                            altGrEl.style.top = '50%';
+                            altGrEl.style.left = '50%';
+                            altGrEl.style.transform = 'translate(-50%, -50%)';
+                            altGrEl.style.color = '#00e5ff';
+                        } else {
+                            altGrEl.innerText = "";
+                        }
+                    }
+                } else {
+                    if (normalEl) normalEl.innerText = mapInfo.normal || "";
+                    if (shiftEl) shiftEl.innerText = mapInfo.shift || "";
+                    // Restore English key logic
+                    if (englishEl) {
+                        if (key >= '0' && key <= '9') englishEl.innerText = key;
+                        else if (key === '-') englishEl.innerText = "-";
+                        else if (key === '=') englishEl.innerText = "=";
+                        else if (key === '[') englishEl.innerText = "[";
+                        else if (key === ']') englishEl.innerText = "]";
+                        else if (key === '\\') englishEl.innerText = "\\";
+                        else if (key === ';') englishEl.innerText = ";";
+                        else if (key === '\'') englishEl.innerText = "'";
+                        else if (key === ',') englishEl.innerText = ",";
+                        else if (key === '.') englishEl.innerText = ".";
+                        else if (key === '/') englishEl.innerText = "/";
+                        else englishEl.innerText = key.toUpperCase();
+                    }
+                    if (altGrEl) {
+                        // Reset centering and font scaling
+                        altGrEl.style.fontSize = '';
+                        altGrEl.style.top = '';
+                        altGrEl.style.left = '';
+                        altGrEl.style.transform = '';
+                        altGrEl.style.color = '';
+                        if (mapInfo.altGr) {
+                            altGrEl.innerText = mapInfo.altGr;
+                            altGrEl.classList.add('purple');
+                        } else {
+                            altGrEl.innerText = "";
+                        }
                     }
                 }
             }
@@ -537,8 +585,8 @@ class TypingAdventureGame {
         // Resume running animations
         this.resumeRunnerAnimations();
 
-        // Resume obstacle loop if consonants level
-        if (this.currentLesson === 'consonants') {
+        // Resume obstacle loop if consonants or vowels level
+        if (['consonants', 'vowels'].includes(this.currentLesson)) {
             if (this.obstacleFrameId) cancelAnimationFrame(this.obstacleFrameId);
             this.obstacleFrameId = requestAnimationFrame(() => this.obstacleUpdateLoop());
         }
@@ -576,8 +624,22 @@ class TypingAdventureGame {
         this.currentText = text;
         this.typedIndex = 0;
 
-        // Parse text into codepoints. 
-        this.textCodepoints = Array.from(text);
+        // Parse text into codepoints, ensuring complex vowels remain single elements
+        const compounds = ['ាំ', 'ុំ', 'ោះ', 'ុះ', 'េះ'];
+        let parsed = [];
+        let tempArr = Array.from(text);
+        for (let i = 0; i < tempArr.length; i++) {
+            if (i < tempArr.length - 1) {
+                const combined = tempArr[i] + tempArr[i + 1];
+                if (compounds.includes(combined)) {
+                    parsed.push(combined);
+                    i++;
+                    continue;
+                }
+            }
+            parsed.push(tempArr[i]);
+        }
+        this.textCodepoints = parsed;
 
         // Update monster display label
         let monsterLabel = text.replace(/\u200B/g, ' ');
@@ -585,7 +647,7 @@ class TypingAdventureGame {
             monsterLabel = monsterLabel.substring(0, 10) + '...';
         }
 
-        if (this.currentLesson === 'consonants') {
+        if (['consonants', 'vowels'].includes(this.currentLesson)) {
             this.dom.monster.style.display = 'none'; // hide monster for basic linear progression
             this.spawnStaticObstacles();
         } else {
@@ -613,11 +675,21 @@ class TypingAdventureGame {
             const char = this.textCodepoints[i];
             const xPos = startX + (i * gap);
 
-            // Alternating visuals for consonants
-            const type = (i % 2 === 0) ? 'sentinel' : 'crate';
+            // Dynamic obstacle type assignment based on character type
+            const jumpChars = ['័', '៍', '៏', '៌', '៖', 'ៈ', 'ៗ', '(', ')', '៕', 'រួ', 'ួ', '!'];
+            let type = '';
+            let className = '';
+
+            if (jumpChars.includes(char)) {
+                type = 'gap';
+                className = 'floor-gap';
+            } else {
+                type = (i % 2 === 0) ? 'sentinel' : 'crate';
+                className = type === 'sentinel' ? 'robot-sentinel' : 'cyber-crate';
+            }
 
             const el = document.createElement('div');
-            el.className = `monster ${type === 'sentinel' ? 'robot-sentinel' : 'cyber-crate'}`;
+            el.className = `monster ${className}`;
             el.style.position = 'absolute';
             el.style.bottom = '30px';
             el.style.left = `${xPos}px`;
@@ -628,6 +700,8 @@ class TypingAdventureGame {
             const label = document.createElement('div');
             label.className = 'monster-label';
             label.innerText = char;
+            label.style.fontSize = '2rem';
+            label.style.fontWeight = 'bold';
             el.appendChild(label);
 
             this.dom.explorer.parentElement.appendChild(el);
@@ -645,7 +719,7 @@ class TypingAdventureGame {
     }
 
     obstacleUpdateLoop() {
-        if (this.isPaused || this.currentLesson !== 'consonants') {
+        if (this.isPaused || !['consonants', 'vowels'].includes(this.currentLesson)) {
             this.obstacleFrameId = null;
             return;
         }
@@ -702,19 +776,19 @@ class TypingAdventureGame {
 
         this.updateStatsDisplay();
     }
-    
+
     showLevelCompleteScreen() {
         this.isPaused = true;
         this.pauseRunnerAnimations();
         clearInterval(this.timerInterval);
-        
+
         synth.playSuccess();
-        
+
         // Populate final stats
         this.dom.completeScore.innerText = this.score;
         this.dom.completeWpm.innerText = this.dom.wpm.innerText;
         this.dom.completeAccuracy.innerText = this.dom.accuracy.innerText;
-        
+
         this.dom.levelCompleteOverlay.classList.remove('hide');
     }
 
@@ -756,12 +830,20 @@ class TypingAdventureGame {
         }
 
         this.dom.typingText.innerHTML = html;
-        
+
+        // Conditionally hide the slab for Lesson 1 & 2
+        const slabContainer = this.dom.typingText.parentElement;
+        if (['consonants', 'vowels'].includes(this.currentLesson)) {
+            slabContainer.style.display = 'none';
+        } else {
+            slabContainer.style.display = '';
+        }
+
         // After DOM update, slide the track to center the active target
         setTimeout(() => {
             const currentEl = this.dom.typingText.querySelector('.char-current');
             const slabWidth = this.dom.typingText.parentElement.offsetWidth;
-            
+
             if (currentEl) {
                 // Calculate exact offset to place the center of the active char in the center of the slab
                 const centerOffset = (slabWidth / 2) - currentEl.offsetLeft - (currentEl.offsetWidth / 2);
@@ -798,8 +880,21 @@ class TypingAdventureGame {
                 document.getElementById('ShiftRight').classList.add('highlight-shift');
             }
 
+            // Highlight altGr key if needed
+            if (mapping.altGr) {
+                const altEl = document.getElementById('AltRight');
+                const ctrlL = document.getElementById('ControlLeft');
+                const altL = document.getElementById('AltLeft');
+                if (altEl) altEl.classList.add('highlight-shift');
+                if (ctrlL) ctrlL.classList.add('highlight-shift');
+                if (altL) altL.classList.add('highlight-shift');
+            }
+
             // Build human-readable instruction banner
             let keyCombo = mapping.shift ? `Shift + ${mapping.qwerty.toUpperCase()}` : mapping.qwerty.toUpperCase();
+            if (mapping.altGr) {
+                keyCombo = `AltGr + ${mapping.qwerty.toUpperCase()}`;
+            }
             if (mapping.code === 'Space') {
                 keyCombo = mapping.shift ? 'Shift + Space' : 'Space';
             }
@@ -814,6 +909,8 @@ class TypingAdventureGame {
         document.querySelectorAll('.key').forEach(key => {
             key.classList.remove('highlight-next', 'highlight-shift');
         });
+        const altR = document.getElementById('AltRight');
+        if (altR) altR.classList.remove('highlight-shift');
     }
 
     // Start timer on first keystroke
@@ -871,6 +968,8 @@ class TypingAdventureGame {
         // Ignore inputs to selectors
         if (e.target.tagName === 'SELECT' || e.target.tagName === 'INPUT') return;
 
+        const isAltGrActive = (e.altKey && e.code === 'AltRight') || (e.ctrlKey && e.altKey);
+
         // Escape key toggles pause
         if (e.key === 'Escape') {
             this.togglePause();
@@ -882,7 +981,7 @@ class TypingAdventureGame {
         if (this.isPaused) return;
 
         // Standard modifiers, function keys
-        if (e.key === 'Control' || e.key === 'Alt' || e.key === 'Meta') return;
+        if (e.key === 'Meta') return;
 
         // Shift modifier visual highlight
         if (e.key === 'Shift') {
@@ -893,6 +992,18 @@ class TypingAdventureGame {
             if (shiftR) shiftR.classList.add('active');
             return;
         }
+
+        // Alt/AltGr/Ctrl modifier visual highlight
+        if (e.key === 'Alt' || e.key === 'AltGraph' || e.key === 'Control') {
+            if (isAltGrActive) {
+                const altEl = document.getElementById('AltRight');
+                if (altEl) altEl.classList.add('active');
+                this.updateVirtualKeyboardLabels(true);
+            }
+            if (e.key !== 'Control') e.preventDefault();
+            return;
+        }
+
 
         // Prevent standard scroll keys, tab defaults in browser
         if (e.key === 'Tab' || e.key === ' ' || e.key === 'Backspace') {
@@ -915,12 +1026,25 @@ class TypingAdventureGame {
         // Determine typed character based on QWERTY layout key mapping
         let typedChar = "";
 
-        let physicalKey = e.key.toLowerCase();
-        if (e.code === 'Space') physicalKey = 'space';
+        let physicalKey = "";
+        if (e.code.startsWith('Key')) physicalKey = e.code.charAt(3).toLowerCase();
+        else if (e.code.startsWith('Digit')) physicalKey = e.code.charAt(5);
+        else if (e.code === 'Minus') physicalKey = '-';
+        else if (e.code === 'Equal') physicalKey = '=';
+        else if (e.code === 'BracketLeft') physicalKey = '[';
+        else if (e.code === 'BracketRight') physicalKey = ']';
+        else if (e.code === 'Backslash') physicalKey = '\\';
+        else if (e.code === 'Semicolon') physicalKey = ';';
+        else if (e.code === 'Quote') physicalKey = "'";
+        else if (e.code === 'Comma') physicalKey = ',';
+        else if (e.code === 'Period') physicalKey = '.';
+        else if (e.code === 'Slash') physicalKey = '/';
+        else if (e.code === 'Space') physicalKey = 'space';
+        else physicalKey = e.key.toLowerCase();
 
         const mapInfo = KHMER_KEYMAP[physicalKey];
         if (mapInfo) {
-            if (e.altKey && mapInfo.altGr) {
+            if (isAltGrActive && mapInfo.altGr) {
                 typedChar = mapInfo.altGr;
             } else if (e.shiftKey && mapInfo.shift) {
                 typedChar = mapInfo.shift;
@@ -928,7 +1052,7 @@ class TypingAdventureGame {
                 typedChar = mapInfo.normal;
             }
         } else {
-            // Try fallback QWERTY translation
+            // Try fallback translation
             typedChar = e.key;
         }
 
@@ -951,11 +1075,45 @@ class TypingAdventureGame {
                 keyEl.classList.add('glow-correct');
                 setTimeout(() => keyEl.classList.remove('glow-correct'), 300);
             }
+            if (isAltGrActive) {
+                const altEl = document.getElementById('AltRight');
+                const ctrlL = document.getElementById('ControlLeft');
+                const altL = document.getElementById('AltLeft');
+                if (altEl) {
+                    altEl.classList.add('glow-correct');
+                    setTimeout(() => altEl.classList.remove('glow-correct'), 300);
+                }
+                if (ctrlL) {
+                    ctrlL.classList.add('glow-correct');
+                    setTimeout(() => ctrlL.classList.remove('glow-correct'), 300);
+                }
+                if (altL) {
+                    altL.classList.add('glow-correct');
+                    setTimeout(() => altL.classList.remove('glow-correct'), 300);
+                }
+            }
             this.processCorrectKeystroke();
         } else {
             if (keyEl) {
                 keyEl.classList.add('glow-incorrect');
                 setTimeout(() => keyEl.classList.remove('glow-incorrect'), 300);
+            }
+            if (isAltGrActive) {
+                const altEl = document.getElementById('AltRight');
+                const ctrlL = document.getElementById('ControlLeft');
+                const altL = document.getElementById('AltLeft');
+                if (altEl) {
+                    altEl.classList.add('glow-incorrect');
+                    setTimeout(() => altEl.classList.remove('glow-incorrect'), 300);
+                }
+                if (ctrlL) {
+                    ctrlL.classList.add('glow-incorrect');
+                    setTimeout(() => ctrlL.classList.remove('glow-incorrect'), 300);
+                }
+                if (altL) {
+                    altL.classList.add('glow-incorrect');
+                    setTimeout(() => altL.classList.remove('glow-incorrect'), 300);
+                }
             }
             this.processIncorrectKeystroke();
 
@@ -976,12 +1134,23 @@ class TypingAdventureGame {
     }
 
     handleKeyUp(e) {
+        const isAltGrActive = (e.altKey && e.code === 'AltRight') || (e.ctrlKey && e.altKey);
+
         if (e.key === 'Shift') {
             this.dom.keyboard.classList.remove('shift-active');
             const shiftL = document.getElementById('ShiftLeft');
             const shiftR = document.getElementById('ShiftRight');
             if (shiftL) shiftL.classList.remove('active');
             if (shiftR) shiftR.classList.remove('active');
+            return;
+        }
+
+        if (e.key === 'Alt' || e.key === 'AltGraph' || e.key === 'Control') {
+            if (!isAltGrActive) {
+                const altEl = document.getElementById('AltRight');
+                if (altEl) altEl.classList.remove('active');
+                this.updateVirtualKeyboardLabels(false);
+            }
             return;
         }
 
@@ -999,14 +1168,18 @@ class TypingAdventureGame {
         synth.playClick();
         this.renderPromptSlab();
 
-        if (this.currentLesson === 'consonants') {
+        if (['consonants', 'vowels'].includes(this.currentLesson)) {
             // Clear the static obstacle at this index
             if (this.activeObstacles && this.typedIndex - 1 < this.activeObstacles.length) {
                 const target = this.activeObstacles[this.typedIndex - 1];
                 if (target && target.el) {
                     target.el.classList.add('crumble');
                     // Play specific animation depending on type
-                    this.triggerExplorerAction(target.type === 'sentinel' ? 'attack' : 'smash');
+                    if (target.type === 'gap' || target.type === 'spike') {
+                        this.triggerExplorerAction('jump');
+                    } else {
+                        this.triggerExplorerAction(target.type === 'sentinel' ? 'attack' : 'smash');
+                    }
                 }
 
                 // Shift the remaining queue forward by 150px smoothly
@@ -1038,7 +1211,7 @@ class TypingAdventureGame {
     }
 
     processIncorrectKeystroke() {
-        if (this.currentLesson === 'consonants') {
+        if (['consonants', 'vowels'].includes(this.currentLesson)) {
             // Trigger enemy charge instead of instant damage/bounce
             if (this.activeObstacles && this.typedIndex < this.activeObstacles.length) {
                 const target = this.activeObstacles[this.typedIndex];
@@ -1076,21 +1249,21 @@ class TypingAdventureGame {
         this.isPaused = true;
         this.pauseRunnerAnimations();
         clearInterval(this.timerInterval);
-        
+
         synth.playSuccess();
-        
+
         // Populate final stats
         this.dom.completeScore.innerText = this.score;
         this.dom.completeWpm.innerText = this.dom.wpm.innerText;
         this.dom.completeErrors.innerText = this.dom.errors ? this.dom.errors.innerText : this.errorsCount;
         this.dom.completeAccuracy.innerText = this.dom.accuracy.innerText;
-        
+
         // Sync next lesson dropdown
         const select = this.dom.launchLevelSelect;
         let nextIndex = select.selectedIndex + 1;
         if (nextIndex >= select.options.length) nextIndex = 0;
         this.dom.completeLevelSelect.selectedIndex = nextIndex;
-        
+
         this.dom.levelCompleteOverlay.classList.remove('hide');
     }
 
