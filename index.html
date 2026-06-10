@@ -54,12 +54,20 @@
                 <select id="level-select">
                     <option value="consonants" selected>ព្យញ្ជនៈគ្រឹះ / Basic Consonants (ក - អ)</option>
                     <option value="vowels">ស្រៈនិស្ស័យ / Dependent Vowels (ា - ៅ)</option>
+                    <option value="independent_vowels">ស្រៈពេញតួ / Independent Vowels (ឥ - ឲ)</option>
                     <option value="subscripts">ជើងព្យញ្ជនៈ / Consonant Subscripts (ខ្មែរ, ភ្នំពេញ)</option>
                     <option value="words">ពាក្យទូទៅ / Common Words</option>
-                    <option value="sentences">ប្រយោគ / Complete Sentences</option>
+                    <option value="sentences">កថាខណ្ឌ / Paragraphs</option>
                     <option value="endless">ផ្សងព្រេងគ្មានទីបញ្ចប់ / Endless Adventure</option>
                 </select>
             </div>
+            <!-- <div class="level-selector">
+                <label for="layout-select">ប្លង់ក្តារចុច / Layout:</label>
+                <select id="layout-select">
+                    <option value="nida" selected>Windows / NIDA</option>
+                    <option value="macos">macOS Native</option>
+                </select>
+            </div> -->
             <div class="btn-group">
                 <button id="btn-restart" class="panel-btn">Restart ↻</button>
                 <button id="btn-sound" class="panel-btn active">Sound 🔊</button>
@@ -429,7 +437,7 @@
                 <div class="key key-space" id="Space" data-key=" ">
                     <div class="key-label">SPACE (បញ្ចូល U+200B ស្រៈដកឃ្លាមើលមិនឃើញ)</div>
                 </div>
-                <div class="key key-right-alt" id="AltRight">
+                <div class="key key-right-alt" id="AltRight" style="display: none;">
                     <div class="key-label">ALTGR</div>
                 </div>
             </div>
@@ -450,9 +458,10 @@
                         <select class="pause-select" id="launch-level-select">
                             <option value="consonants" selected>ព្យញ្ជនៈគ្រឹះ / Basic Consonants (ក - អ)</option>
                             <option value="vowels">ស្រៈនិស្ស័យ / Dependent Vowels (ា - ៅ)</option>
+                            <option value="independent_vowels">ស្រៈពេញតួ / Independent Vowels (ឥ - ឲ)</option>
                             <option value="subscripts">ជើងព្យញ្ជនៈ / Consonant Subscripts (ខ្មែរ, ភ្នំពេញ)</option>
                             <option value="words">ពាក្យទូទៅ / Common Words</option>
-                            <option value="sentences">ប្រយោគ / Complete Sentences</option>
+                            <option value="sentences">កថាខណ្ឌ / Paragraphs</option>
                             <option value="endless">ផ្សងព្រេងគ្មានទីបញ្ចប់ / Endless Adventure</option>
                         </select>
                     </div>
@@ -494,9 +503,10 @@
                         <select class="pause-select" id="complete-level-select">
                             <option value="consonants">ព្យញ្ជនៈគ្រឹះ / Basic Consonants (ក - អ)</option>
                             <option value="vowels">ស្រៈនិស្ស័យ / Dependent Vowels (ា - ៅ)</option>
+                            <option value="independent_vowels">ស្រៈពេញតួ / Independent Vowels (ឥ - ឲ)</option>
                             <option value="subscripts">ជើងព្យញ្ជនៈ / Consonant Subscripts (ខ្មែរ, ភ្នំពេញ)</option>
                             <option value="words">ពាក្យទូទៅ / Common Words</option>
-                            <option value="sentences">ប្រយោគ / Complete Sentences</option>
+                            <option value="sentences">កថាខណ្ឌ / Paragraphs</option>
                             <option value="endless">ផ្សងព្រេងគ្មានទីបញ្ចប់ / Endless Adventure</option>
                         </select>
                     </div>
@@ -534,6 +544,7 @@
                         <select class="pause-select" id="pause-level-select">
                             <option value="consonants" selected>ព្យញ្ជនៈគ្រឹះ / Basic Consonants (ក - អ)</option>
                             <option value="vowels">ស្រៈនិស្ស័យ / Dependent Vowels (ា - ៅ)</option>
+                            <option value="independent_vowels">ស្រៈពេញតួ / Independent Vowels (ឥ - ឲ)</option>
                             <option value="subscripts">ជើងព្យញ្ជនៈ / Consonant Subscripts (ខ្មែរ, ភ្នំពេញ)</option>
                             <option value="words">ពាក្យទូទៅ / Common Words</option>
                             <option value="sentences">ប្រយោគ / Complete Sentences</option>

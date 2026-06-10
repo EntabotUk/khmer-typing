@@ -1,0 +1,237 @@
+{
+  "q": {
+    "normal": "ឆ",
+    "shift": "ឈ",
+    "altGr": ""
+  },
+  "w": {
+    "normal": "ឹ",
+    "shift": "ឺ",
+    "altGr": ""
+  },
+  "e": {
+    "normal": "េ",
+    "shift": "ែ",
+    "altGr": "ឯ"
+  },
+  "r": {
+    "normal": "រ",
+    "shift": "ឬ",
+    "altGr": ""
+  },
+  "t": {
+    "normal": "ត",
+    "shift": "ទ",
+    "altGr": ""
+  },
+  "y": {
+    "normal": "យ",
+    "shift": "ួ",
+    "altGr": ""
+  },
+  "u": {
+    "normal": "ុ",
+    "shift": "ូ",
+    "altGr": ""
+  },
+  "i": {
+    "normal": "ិ",
+    "shift": "ី",
+    "altGr": "ឦ"
+  },
+  "o": {
+    "normal": "ោ",
+    "shift": "ៅ",
+    "altGr": "ឱ"
+  },
+  "p": {
+    "normal": "ផ",
+    "shift": "ភ",
+    "altGr": "ឰ"
+  },
+  "[": {
+    "normal": "ៀ",
+    "shift": "ឿ",
+    "altGr": "ឩ"
+  },
+  "]": {
+    "normal": "ឪ",
+    "shift": "ឧ",
+    "altGr": ""
+  },
+  "\\": {
+    "normal": "ឮ",
+    "shift": "ឭ",
+    "altGr": "\\"
+  },
+  "a": {
+    "normal": "ា",
+    "shift": "ឫ",
+    "altGr": ""
+  },
+  "s": {
+    "normal": "ស",
+    "shift": "ៃ",
+    "altGr": ""
+  },
+  "d": {
+    "normal": "ដ",
+    "shift": "ឌ",
+    "altGr": ""
+  },
+  "f": {
+    "normal": "ថ",
+    "shift": "ធ",
+    "altGr": ""
+  },
+  "g": {
+    "normal": "ង",
+    "shift": "អ",
+    "altGr": ""
+  },
+  "h": {
+    "normal": "ហ",
+    "shift": "ះ",
+    "altGr": ""
+  },
+  "j": {
+    "normal": "្",
+    "shift": "ញ",
+    "altGr": ""
+  },
+  "k": {
+    "normal": "ក",
+    "shift": "គ",
+    "altGr": ""
+  },
+  "l": {
+    "normal": "ល",
+    "shift": "ឡ",
+    "altGr": ""
+  },
+  ";": {
+    "normal": "ើ",
+    "shift": "ោះ",
+    "altGr": "៖"
+  },
+  "'": {
+    "normal": "់",
+    "shift": "៉",
+    "altGr": "ៈ"
+  },
+  "z": {
+    "normal": "ឋ",
+    "shift": "ឍ",
+    "altGr": ""
+  },
+  "x": {
+    "normal": "ខ",
+    "shift": "ឃ",
+    "altGr": ""
+  },
+  "c": {
+    "normal": "ច",
+    "shift": "ជ",
+    "altGr": ""
+  },
+  "v": {
+    "normal": "វ",
+    "shift": "េះ",
+    "altGr": ""
+  },
+  "b": {
+    "normal": "ប",
+    "shift": "ព",
+    "altGr": ""
+  },
+  "n": {
+    "normal": "ន",
+    "shift": "ណ",
+    "altGr": ""
+  },
+  "m": {
+    "normal": "ម",
+    "shift": "ំ",
+    "altGr": ""
+  },
+  ",": {
+    "normal": ",",
+    "shift": "<",
+    "altGr": ""
+  },
+  ".": {
+    "normal": "។",
+    "shift": "៕",
+    "altGr": ""
+  },
+  "/": {
+    "normal": "៊",
+    "shift": "?",
+    "altGr": "/"
+  },
+  "1": {
+    "normal": "១",
+    "shift": "!",
+    "altGr": ""
+  },
+  "2": {
+    "normal": "២",
+    "shift": "ៗ",
+    "altGr": ""
+  },
+  "3": {
+    "normal": "៣",
+    "shift": "\"",
+    "altGr": ""
+  },
+  "4": {
+    "normal": "៤",
+    "shift": "៛",
+    "altGr": "៎"
+  },
+  "5": {
+    "normal": "៥",
+    "shift": "%",
+    "altGr": "€"
+  },
+  "6": {
+    "normal": "៦",
+    "shift": "៍",
+    "altGr": "៙"
+  },
+  "7": {
+    "normal": "៧",
+    "shift": "័",
+    "altGr": ""
+  },
+  "8": {
+    "normal": "៨",
+    "shift": "៏",
+    "altGr": "*"
+  },
+  "9": {
+    "normal": "៩",
+    "shift": "(",
+    "altGr": "{"
+  },
+  "0": {
+    "normal": "០",
+    "shift": ")",
+    "altGr": "}"
+  },
+  "-": {
+    "normal": "ឥ",
+    "shift": "៌",
+    "altGr": "×"
+  },
+  "=": {
+    "normal": "ឲ",
+    "shift": "=",
+    "altGr": "៎"
+  },
+  "space": {
+    "normal": "\u200B",
+    "shift": " ",
+    "altGr": ""
+  }
+}

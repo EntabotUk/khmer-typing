@@ -1,125 +1,70 @@
-// --- Khmer Unicode Keymap Mapping (NiDA Layout) ---
-const KHMER_KEYMAP = {
-    "q": { "normal": "ឆ", "shift": "ឈ", "altGr": "" },
-    "w": { "normal": "ឹ", "shift": "ឺ", "altGr": "" },
-    "e": { "normal": "េ", "shift": "ែ", "altGr": "ឯ" },
-    "r": { "normal": "រ", "shift": "ឬ", "altGr": "" },
-    "t": { "normal": "ត", "shift": "ទ", "altGr": "" },
-    "y": { "normal": "យ", "shift": "ួ", "altGr": "" },
-    "u": { "normal": "ុ", "shift": "ូ", "altGr": "" },
-    "i": { "normal": "ិ", "shift": "ី", "altGr": "ឦ" },
-    "o": { "normal": "ោ", "shift": "ៅ", "altGr": "ឱ" },
-    "p": { "normal": "ផ", "shift": "ភ", "altGr": "ឰ" },
-    "[": { "normal": "ៀ", "shift": "ឿ", "altGr": "ឩ" },
-    "]": { "normal": "ឪ", "shift": "ឧ", "altGr": "ឳ" },
-    "\\": { "normal": "ឮ", "shift": "ឭ", "altGr": "\\" },
-    "a": { "normal": "ា", "shift": "ាំ", "altGr": "" },
-    "s": { "normal": "ស", "shift": "ៃ", "altGr": "" },
-    "d": { "normal": "ដ", "shift": "ឌ", "altGr": "" },
-    "f": { "normal": "ថ", "shift": "ធ", "altGr": "" },
-    "g": { "normal": "ង", "shift": "អ", "altGr": "" },
-    "h": { "normal": "ហ", "shift": "ះ", "altGr": "" },
-    "j": { "normal": "្", "shift": "ញ", "altGr": "" },
-    "k": { "normal": "ក", "shift": "គ", "altGr": "" },
-    "l": { "normal": "ល", "shift": "ឡ", "altGr": "" },
-    ";": { "normal": "ើ", "shift": "ោះ", "altGr": "៖" },
-    "'": { "normal": "់", "shift": "៉", "altGr": "ៈ" },
-    "z": { "normal": "ឋ", "shift": "ឍ", "altGr": "" },
-    "x": { "normal": "ខ", "shift": "ឃ", "altGr": "" },
-    "c": { "normal": "ច", "shift": "ជ", "altGr": "" },
-    "v": { "normal": "វ", "shift": "េះ", "altGr": "" },
-    "b": { "normal": "ប", "shift": "ព", "altGr": "" },
-    "n": { "normal": "ន", "shift": "ណ", "altGr": "" },
-    "m": { "normal": "ម", "shift": "ំ", "altGr": "" },
-    ",": { "normal": "ុំ", "shift": "ុះ", "altGr": "," },
-    ".": { "normal": "។", "shift": "៕", "altGr": "" },
-    "/": { "normal": "៊", "shift": "?", "altGr": "/" },
-    "1": { "normal": "១", "shift": "!", "altGr": "" },
-    "2": { "normal": "២", "shift": "ៗ", "altGr": "" },
-    "3": { "normal": "៣", "shift": '"', "altGr": "" },
-    "4": { "normal": "៤", "shift": "៛", "altGr": "៎" },
-    "5": { "normal": "៥", "shift": "%", "altGr": "€" },
-    "6": { "normal": "៦", "shift": "៍", "altGr": "៙" },
-    "7": { "normal": "៧", "shift": "័", "altGr": "៚" },
-    "8": { "normal": "៨", "shift": "៏", "altGr": "*" },
-    "9": { "normal": "៩", "shift": "(", "altGr": "{" },
-    "0": { "normal": "០", "shift": ")", "altGr": "}" },
-    "-": { "normal": "ឥ", "shift": "៌", "altGr": "×" },
-    "=": { "normal": "ឲ", "shift": "=", "altGr": "៎" },
-    "space": { "normal": "\u200B", "shift": " ", "altGr": "" }
-};
+// --- Keyboard Layout Management ---
+let currentLayoutMode = "nida";
+let activeLayoutData = null;
+let KHMER_TO_QWERTY = {};
 
-// Create a reverse mapping (Khmer character -> QWERTY keystroke info)
-const KHMER_TO_QWERTY = {};
-for (const [key, val] of Object.entries(KHMER_KEYMAP)) {
-    let codeStr = 'Key' + key.toUpperCase();
-    if (key >= '0' && key <= '9') codeStr = 'Digit' + key;
-    if (key === 'space') codeStr = 'Space';
-    if (key === '-') codeStr = 'Minus';
-    if (key === '=') codeStr = 'Equal';
-    if (key === '[') codeStr = 'BracketLeft';
-    if (key === ']') codeStr = 'BracketRight';
-    if (key === '\\') codeStr = 'Backslash';
-    if (key === ';') codeStr = 'Semicolon';
-    if (key === '\'') codeStr = 'Quote';
-    if (key === ',') codeStr = 'Comma';
-    if (key === '.') codeStr = 'Period';
-    if (key === '/') codeStr = 'Slash';
+async function loadLayout(layoutName) {
+    try {
+        const response = await fetch(`./layout_${layoutName}.json`);
+        const data = await response.json();
+        activeLayoutData = data;
 
-    if (val.normal) KHMER_TO_QWERTY[val.normal] = { qwerty: key, code: codeStr, shift: false, name: val.normal };
-    if (val.shift) KHMER_TO_QWERTY[val.shift] = { qwerty: key, code: codeStr, shift: true, name: val.shift };
-    if (val.altGr) KHMER_TO_QWERTY[val.altGr] = { qwerty: key, code: codeStr, shift: false, altGr: true, name: val.altGr };
+        KHMER_TO_QWERTY = {};
+        for (const [key, val] of Object.entries(activeLayoutData)) {
+            let codeStr = 'Key' + key.toUpperCase();
+            if (key >= '0' && key <= '9') codeStr = 'Digit' + key;
+            if (key === 'space') codeStr = 'Space';
+            if (key === '-') codeStr = 'Minus';
+            if (key === '=') codeStr = 'Equal';
+            if (key === '[') codeStr = 'BracketLeft';
+            if (key === ']') codeStr = 'BracketRight';
+            if (key === '\\') codeStr = 'Backslash';
+            if (key === ';') codeStr = 'Semicolon';
+            if (key === '\'') codeStr = 'Quote';
+            if (key === ',') codeStr = 'Comma';
+            if (key === '.') codeStr = 'Period';
+            if (key === '/') codeStr = 'Slash';
+
+            if (val.normal) KHMER_TO_QWERTY[val.normal] = { qwerty: key, code: codeStr, shift: false, name: val.normal };
+            if (val.shift) KHMER_TO_QWERTY[val.shift] = { qwerty: key, code: codeStr, shift: true, name: val.shift };
+            if (val.altGr) KHMER_TO_QWERTY[val.altGr] = { qwerty: key, code: codeStr, shift: false, altGr: true, name: val.altGr };
+        }
+
+        // Add special combinations that output multiple codepoints (e.g. ាំ, េះ, ោះ)
+        KHMER_TO_QWERTY['ាំ'] = { qwerty: 'A', code: 'KeyA', shift: true, name: 'ាំ (ស្រៈ ាំ)' };
+        KHMER_TO_QWERTY['េះ'] = { qwerty: 'V', code: 'KeyV', shift: true, name: 'េះ (ស្រៈ េះ)' };
+        KHMER_TO_QWERTY['ោះ'] = { qwerty: ':', code: 'Semicolon', shift: true, name: 'ោះ (ស្រៈ ោះ)' };
+
+        if (window.gameInstance) {
+            window.gameInstance.updateVirtualKeyboardLabels();
+        }
+    } catch (e) {
+        console.error("Failed to load layout:", e);
+    }
 }
-
-// Add special combinations that output multiple codepoints (e.g. ាំ, េះ, ោះ)
-KHMER_TO_QWERTY['ាំ'] = { qwerty: 'A', code: 'KeyA', shift: true, name: 'ាំ (ស្រៈ ាំ)' };
-KHMER_TO_QWERTY['េះ'] = { qwerty: 'V', code: 'KeyV', shift: true, name: 'េះ (ស្រៈ េះ)' };
-KHMER_TO_QWERTY['ោះ'] = { qwerty: ':', code: 'Semicolon', shift: true, name: 'ោះ (ស្រៈ ោះ)' };
-
 
 
 // --- Game Content Pool (Lessons & Sentences) ---
-const GAME_LESSONS = {
-    consonants: [
-        "កខគឃងចឆជឈញដឋឌឍណតថទធនបផពភមយរលវសហឡអ"
-    ],
-    vowels: [
-        "ាិីឹឺុូួើឿៀេែៃោៅុំំាំះុះេះោះឥឦឧឱឲឩឪឬឮឭ័៍៏៌៏៌័៖ៗៈ()៕!"
-    ],
-    subscripts: [
-        "ខ្មែរ",
-        "អង្គរវត្ត",
-        "ភ្នំពេញ",
-        "សាលារៀន",
-        "គ្រូពេទ្យ",
-        "ប្រាសាទបាយ័ន",
-        "ប្រវត្តិសាស្ត្រ",
-        "កម្ពុជា"
-    ],
-    words: [
-        "ភាសាខ្មែរ",
-        "អក្សរសាស្ត្រ",
-        "មាតុភូមិ",
-        "សន្តិភាព",
-        "វប្បធម៌",
-        "សិល្បៈ",
-        "អរិយធម៌",
-        "សេចក្តីស្រឡាញ់",
-        "មិត្តភាព",
-        "ចំណេះដឹង"
-    ],
-    sentences: [
-        "ភាសាខ្មែរគឺជាអត្តសញ្ញាណជាតិរបស់យើង។",
-        "ខ្ញុំស្រឡាញ់ប្រាសាទអង្គរវត្តខ្លាំងណាស់។",
-        "ការរៀនសូត្រនាំមកនូវពន្លឺនៃជីវិត។",
-        "ការពារព្រៃឈើដើម្បីសហគមន៍និងភពផែនដី។",
-        "ប្រទេសកម្ពុជាល្បីល្បាញដោយសារវប្បធម៌ដ៏រុងរឿង។"
-    ],
-    endless: [
-        "ភាសាខ្មែរ", "ខ្មែរ", "អង្គរវត្ត", "ប្រាសាទ", "កម្ពុជា", "ភ្នំពេញ", "សន្តិភាព", "វប្បធម៌",
-        "អរិយធម៌", "សាលារៀន", "មិត្តភក្តិ", "គ្រួសារ", "សៀវភៅ", "ប៊ិច", "កុំព្យូទ័រ", "ហ្គេម"
-    ]
-};
+let GAME_LESSONS = {};
+
+async function loadLessons() {
+    const lessonFiles = [
+        'consonants', 'vowels', 'vowels_words', 'independent_vowels', 
+        'independent_vowels_words', 'subscripts', 'words', 'sentences', 'endless'
+    ];
+    for (const file of lessonFiles) {
+        try {
+            const res = await fetch(`lessons/${file}.json`);
+            if (res.ok) {
+                GAME_LESSONS[file] = await res.json();
+            } else {
+                console.error(`Failed to load lesson: ${file}`);
+            }
+        } catch (e) {
+            console.error(`Error loading lesson ${file}:`, e);
+        }
+    }
+}
 
 
 // --- Synthesized Audio (Web Audio API) ---
@@ -217,6 +162,8 @@ class TypingAdventureGame {
         this.errorsCount = 0;
         this.startTime = null;
         this.timerInterval = null;
+        this.successfulClears = 0;
+        this.linearTargetIndex = 0;
         this.elapsedSeconds = 0;
 
         // Game state
@@ -240,6 +187,9 @@ class TypingAdventureGame {
         this.incorrectKeyPressCount = 0;
 
         // DOM elements
+        this.successfulClears = 0;
+        this.linearTargetIndex = 0;
+
         this.dom = {
             wpm: document.querySelector('#stat-wpm .stat-value'),
             accuracy: document.querySelector('#stat-accuracy .stat-value'),
@@ -249,6 +199,7 @@ class TypingAdventureGame {
             progressBarText: document.querySelector('.progress-text'),
             progressBarFill: document.querySelector('.progress-bar-fill'),
             levelSelect: document.getElementById('level-select'),
+            layoutSelect: document.getElementById('layout-select'),
             btnRestart: document.getElementById('btn-restart'),
             btnSound: document.getElementById('btn-sound'),
             btnKeyboardToggle: document.getElementById('btn-keyboard-toggle'),
@@ -281,6 +232,15 @@ class TypingAdventureGame {
 
         // Bind events
         this.dom.levelSelect.addEventListener('change', (e) => this.changeLesson(e.target.value));
+        if (this.dom.layoutSelect) {
+            this.dom.layoutSelect.addEventListener('change', async (e) => {
+                currentLayoutMode = e.target.value;
+                await loadLayout(currentLayoutMode);
+                // The updateVirtualKeyboardLabels is called inside loadLayout
+                // So no need to call it again, but if we need focus back, we can handle it
+                this.dom.explorer.focus();
+            });
+        }
         this.dom.btnRestart.addEventListener('click', () => this.restartGame());
         this.dom.btnSound.addEventListener('click', () => this.toggleSound());
         this.dom.btnKeyboardToggle.addEventListener('click', () => this.toggleKeyboard());
@@ -371,7 +331,8 @@ class TypingAdventureGame {
     }
 
     updateVirtualKeyboardLabels(isAltGrActive = false) {
-        for (const [key, mapInfo] of Object.entries(KHMER_KEYMAP)) {
+        if (!activeLayoutData) return;
+        for (const [key, mapInfo] of Object.entries(activeLayoutData)) {
             if (key === 'space') continue;
             let codeStr = 'Key' + key.toUpperCase();
             if (key >= '0' && key <= '9') codeStr = 'Digit' + key;
@@ -456,6 +417,14 @@ class TypingAdventureGame {
         this.incorrectKeyPressCount = 0;
         this.elapsedSeconds = 0;
         this.startTime = null;
+        this.successfulClears = 0;
+        this.phrasesCleared = 0;
+        this.linearTargetIndex = 0;
+
+        if (this.dom.progressBarFill) {
+            this.dom.progressBarFill.style.width = '0%';
+            this.dom.progressBarText.innerText = '0%';
+        }
 
         if (this.timerInterval) {
             clearInterval(this.timerInterval);
@@ -585,8 +554,8 @@ class TypingAdventureGame {
         // Resume running animations
         this.resumeRunnerAnimations();
 
-        // Resume obstacle loop if consonants or vowels level
-        if (['consonants', 'vowels'].includes(this.currentLesson)) {
+        // Resume obstacle loop if consonants, vowels or independent vowels level
+        if (['consonants', 'vowels', 'independent_vowels', 'subscripts'].includes(this.currentLesson)) {
             if (this.obstacleFrameId) cancelAnimationFrame(this.obstacleFrameId);
             this.obstacleFrameId = requestAnimationFrame(() => this.obstacleUpdateLoop());
         }
@@ -605,8 +574,11 @@ class TypingAdventureGame {
 
     // Load next text block based on selected lesson
     loadNextText() {
-        const pool = GAME_LESSONS[this.currentLesson];
+        let pool = GAME_LESSONS[this.currentLesson];
         let text = "";
+
+        const isIsolatedTargetMode = ['consonants', 'vowels', 'independent_vowels', 'subscripts'].includes(this.currentLesson);
+        let parsed = [];
 
         if (this.currentLesson === 'endless') {
             // Endless mode compiles 4 random words separated by ZWSP
@@ -616,6 +588,55 @@ class TypingAdventureGame {
             }
             // Join words using Zero Width Space (ZWSP)
             text = words.join('\u200B');
+        } else if (isIsolatedTargetMode) {
+            if (this.currentLesson === 'consonants') {
+                if (this.successfulClears >= 33) {
+                    for (let i = 0; i < 33; i++) parsed.push(pool[Math.floor(Math.random() * pool.length)]);
+                } else {
+                    const activePhasePool = pool;
+                    for (let i = 0; i < activePhasePool.length; i++) {
+                        let currentTarget = activePhasePool[this.linearTargetIndex];
+                        parsed.push(currentTarget);
+                        this.linearTargetIndex++;
+                        if (this.linearTargetIndex >= activePhasePool.length) this.linearTargetIndex = 0;
+                    }
+                }
+            } else if (this.currentLesson === 'vowels') {
+                if (this.successfulClears >= 23) {
+                    pool = GAME_LESSONS['vowels_words'];
+                    for (let i = 0; i < 15; i++) parsed.push(pool[Math.floor(Math.random() * pool.length)]);
+                } else {
+                    const activePhasePool = pool;
+                    for (let i = 0; i < activePhasePool.length; i++) {
+                        let currentTarget = activePhasePool[this.linearTargetIndex];
+                        parsed.push(currentTarget);
+                        this.linearTargetIndex++;
+                        if (this.linearTargetIndex >= activePhasePool.length) this.linearTargetIndex = 0;
+                    }
+                }
+            } else if (this.currentLesson === 'independent_vowels') {
+                if (this.successfulClears >= 6) {
+                    pool = GAME_LESSONS['independent_vowels_words'];
+                    for (let i = 0; i < 15; i++) parsed.push(pool[Math.floor(Math.random() * pool.length)]);
+                } else {
+                    const activePhasePool = pool;
+                    for (let i = 0; i < activePhasePool.length; i++) {
+                        let currentTarget = activePhasePool[this.linearTargetIndex];
+                        parsed.push(currentTarget);
+                        this.linearTargetIndex++;
+                        if (this.linearTargetIndex >= activePhasePool.length) this.linearTargetIndex = 0;
+                    }
+                }
+            } else if (this.currentLesson === 'subscripts') {
+                const activePhasePool = pool;
+                for (let i = 0; i < activePhasePool.length; i++) {
+                    let currentTarget = activePhasePool[this.linearTargetIndex];
+                    parsed.push(currentTarget);
+                    this.linearTargetIndex++;
+                    if (this.linearTargetIndex >= activePhasePool.length) this.linearTargetIndex = 0;
+                }
+            }
+            text = parsed.join('');
         } else {
             // Level mode picks a random sentence/block
             text = pool[Math.floor(Math.random() * pool.length)];
@@ -624,20 +645,29 @@ class TypingAdventureGame {
         this.currentText = text;
         this.typedIndex = 0;
 
-        // Parse text into codepoints, ensuring complex vowels remain single elements
-        const compounds = ['ាំ', 'ុំ', 'ោះ', 'ុះ', 'េះ'];
-        let parsed = [];
-        let tempArr = Array.from(text);
-        for (let i = 0; i < tempArr.length; i++) {
-            if (i < tempArr.length - 1) {
-                const combined = tempArr[i] + tempArr[i + 1];
-                if (compounds.includes(combined)) {
-                    parsed.push(combined);
-                    i++;
-                    continue;
+        // Clear active static obstacles from DOM to prevent state leakage
+        if (this.activeObstacles) {
+            this.activeObstacles.forEach(o => {
+                if (o.el && o.el.parentNode) o.el.parentNode.removeChild(o.el);
+            });
+            this.activeObstacles = [];
+        }
+
+        if (!isIsolatedTargetMode) {
+            // Parse text into codepoints, ensuring complex vowels remain single elements
+            const compounds = ['ាំ', 'ុំ', 'ោះ', 'ុះ', 'េះ'];
+            let tempArr = Array.from(text);
+            for (let i = 0; i < tempArr.length; i++) {
+                if (i < tempArr.length - 1) {
+                    const combined = tempArr[i] + tempArr[i + 1];
+                    if (compounds.includes(combined)) {
+                        parsed.push(combined);
+                        i++;
+                        continue;
+                    }
                 }
+                parsed.push(tempArr[i]);
             }
-            parsed.push(tempArr[i]);
         }
         this.textCodepoints = parsed;
 
@@ -647,9 +677,8 @@ class TypingAdventureGame {
             monsterLabel = monsterLabel.substring(0, 10) + '...';
         }
 
-        if (['consonants', 'vowels'].includes(this.currentLesson)) {
+        if (['consonants', 'vowels', 'independent_vowels', 'subscripts'].includes(this.currentLesson)) {
             this.dom.monster.style.display = 'none'; // hide monster for basic linear progression
-            this.spawnStaticObstacles();
         } else {
             this.dom.monster.style.display = '';
             this.dom.monsterText.innerText = monsterLabel;
@@ -657,6 +686,7 @@ class TypingAdventureGame {
         }
 
         this.renderPromptSlab();
+        this.spawnStaticObstacles();
         this.updateNextCharacterHint();
     }
 
@@ -704,11 +734,71 @@ class TypingAdventureGame {
             label.style.fontWeight = 'bold';
             el.appendChild(label);
 
-            this.dom.explorer.parentElement.appendChild(el);
+            if (['consonants', 'vowels', 'independent_vowels', 'subscripts'].includes(this.currentLesson)) {
+                this.dom.explorer.parentElement.appendChild(el);
+            }
+
+            let sequence = null;
+            const normChar = char.normalize('NFC');
+            
+            let hasShortcut = false;
+            if (activeLayoutData) {
+                for (const val of Object.values(activeLayoutData)) {
+                    if (val.normal === normChar || val.shift === normChar || val.altGr === normChar) {
+                        hasShortcut = true;
+                        break;
+                    }
+                }
+            }
+
+            if (!hasShortcut && Array.from(normChar).length > 1) {
+                let seq = [];
+                let tempArr = Array.from(normChar);
+                for (let i = 0; i < tempArr.length; i++) {
+                    // Check 3-character compounds (like 'ោះ' which is េ + ោ + ះ)
+                    if (i < tempArr.length - 2) {
+                        const combined3 = tempArr[i] + tempArr[i+1] + tempArr[i+2];
+                        let has3 = false;
+                        if (activeLayoutData) {
+                            for (const val of Object.values(activeLayoutData)) {
+                                if (val.normal === combined3 || val.shift === combined3 || val.altGr === combined3) {
+                                    has3 = true; break;
+                                }
+                            }
+                        }
+                        if (has3) {
+                            seq.push(combined3);
+                            i += 2;
+                            continue;
+                        }
+                    }
+                    // Check 2-character compounds (like 'ាំ', 'ុំ', 'េះ', 'ុះ')
+                    if (i < tempArr.length - 1) {
+                        const combined2 = tempArr[i] + tempArr[i + 1];
+                        let has2 = false;
+                        if (activeLayoutData) {
+                            for (const val of Object.values(activeLayoutData)) {
+                                if (val.normal === combined2 || val.shift === combined2 || val.altGr === combined2) {
+                                    has2 = true; break;
+                                }
+                            }
+                        }
+                        if (has2) {
+                            seq.push(combined2);
+                            i++;
+                            continue;
+                        }
+                    }
+                    seq.push(tempArr[i]);
+                }
+                sequence = seq.map(s => s.normalize('NFC'));
+            }
 
             this.activeObstacles.push({
                 type: type,
-                char: char,
+                char: char.normalize('NFC'),
+                sequence: sequence,
+                currentStrokeIndex: 0,
                 x: xPos,
                 el: el
             });
@@ -719,7 +809,7 @@ class TypingAdventureGame {
     }
 
     obstacleUpdateLoop() {
-        if (this.isPaused || !['consonants', 'vowels'].includes(this.currentLesson)) {
+        if (this.isPaused || !['consonants', 'vowels', 'independent_vowels', 'subscripts'].includes(this.currentLesson)) {
             this.obstacleFrameId = null;
             return;
         }
@@ -758,10 +848,12 @@ class TypingAdventureGame {
     }
 
     handleObstacleMiss(target) {
-        this.incorrectKeyPressCount++;
-        this.score = Math.max(0, this.score - 5);
-
-        synth.playError();
+        if (!target.isCharging) {
+            this.errorsCount++;
+            this.incorrectKeyPressCount++;
+            this.score = Math.max(0, this.score - 5);
+            synth.playError();
+        }
         this.triggerPlayerDamage();
 
         // Stop charge, trigger smooth bounce back
@@ -821,7 +913,7 @@ class TypingAdventureGame {
 
             // Visually display ZWSP and standard Space
             if (char === '\u200B') {
-                html += `<span class="char-space-indicator ${classStr}">⎵</span>`;
+                html += `<span class="zwsp-visual-indicator ${classStr}" style="color: #00d2ff; margin: 0 4px; opacity: 0.6; font-weight: bold;">|</span>`;
             } else if (char === ' ') {
                 html += `<span class="char-space-indicator ${classStr}">␣</span>`;
             } else {
@@ -833,7 +925,7 @@ class TypingAdventureGame {
 
         // Conditionally hide the slab for Lesson 1 & 2
         const slabContainer = this.dom.typingText.parentElement;
-        if (['consonants', 'vowels'].includes(this.currentLesson)) {
+        if (['consonants', 'vowels', 'independent_vowels', 'subscripts'].includes(this.currentLesson)) {
             slabContainer.style.display = 'none';
         } else {
             slabContainer.style.display = '';
@@ -862,8 +954,63 @@ class TypingAdventureGame {
             return;
         }
 
-        const char = this.textCodepoints[this.typedIndex];
-        const mapping = KHMER_TO_QWERTY[char];
+        let char = this.textCodepoints[this.typedIndex];
+        let mapping = null;
+
+        if (this.activeObstacles && this.typedIndex < this.activeObstacles.length) {
+            const activeObstacle = this.activeObstacles[this.typedIndex];
+            char = activeObstacle.char;
+
+            let hasShortcut = false;
+            if (activeLayoutData) {
+                for (const val of Object.values(activeLayoutData)) {
+                    if (val.normal === char || val.shift === char || val.altGr === char) {
+                        hasShortcut = true;
+                        break;
+                    }
+                }
+            }
+
+            // If there's no single-key shortcut (like "កា"), use the sequence substroke
+            if (!hasShortcut && activeObstacle.sequence && activeObstacle.currentStrokeIndex < activeObstacle.sequence.length) {
+                char = activeObstacle.sequence[activeObstacle.currentStrokeIndex];
+            }
+
+            // Explicit reverse lookup through active layout data
+            if (activeLayoutData) {
+                for (const [key, val] of Object.entries(activeLayoutData)) {
+                    if (val.normal === char) {
+                        mapping = { qwerty: key, shift: false, name: val.normal }; break;
+                    } else if (val.shift === char) {
+                        mapping = { qwerty: key, shift: true, name: val.shift }; break;
+                    } else if (val.altGr === char) {
+                        mapping = { qwerty: key, shift: false, altGr: true, name: val.altGr }; break;
+                    }
+                }
+            }
+
+            if (mapping) {
+                let key = mapping.qwerty;
+                let codeStr = 'Key' + key.toUpperCase();
+                if (key >= '0' && key <= '9') codeStr = 'Digit' + key;
+                if (key === 'space') codeStr = 'Space';
+                if (key === '-') codeStr = 'Minus';
+                if (key === '=') codeStr = 'Equal';
+                if (key === '[') codeStr = 'BracketLeft';
+                if (key === ']') codeStr = 'BracketRight';
+                if (key === '\\') codeStr = 'Backslash';
+                if (key === ';') codeStr = 'Semicolon';
+                if (key === '\'') codeStr = 'Quote';
+                if (key === ',') codeStr = 'Comma';
+                if (key === '.') codeStr = 'Period';
+                if (key === '/') codeStr = 'Slash';
+                mapping.code = codeStr;
+            }
+        }
+
+        if (!mapping) {
+            mapping = KHMER_TO_QWERTY[char];
+        }
 
         this.clearKeyHighlights();
 
@@ -956,17 +1103,34 @@ class TypingAdventureGame {
 
         // Progress Bar
         let progressPercent = 0;
-        if (this.textCodepoints && this.textCodepoints.length > 0) {
-            progressPercent = Math.round((this.typedIndex / this.textCodepoints.length) * 100);
+        const isIsolatedTargetMode = ['consonants', 'vowels', 'independent_vowels', 'subscripts'].includes(this.currentLesson);
+
+        if (isIsolatedTargetMode) {
+            let totalRequiredClears = 38;
+            if (this.currentLesson === 'consonants') totalRequiredClears = 66;
+            else if (this.currentLesson === 'independent_vowels') totalRequiredClears = 21;
+            else if (this.currentLesson === 'subscripts') totalRequiredClears = 32;
+            progressPercent = Math.min(100, Math.round((this.successfulClears / totalRequiredClears) * 100));
+        } else {
+            if (this.activeObstacles && this.activeObstacles.length > 0) {
+                progressPercent = Math.min(100, Math.round((this.successfulClears / this.activeObstacles.length) * 100));
+            }
         }
+
         this.dom.progressBarText.innerText = `${progressPercent}%`;
         this.dom.progressBarFill.style.width = `${progressPercent}%`;
     }
 
     // Intercept physical key presses
     handleKeyDown(e) {
+        if (e.repeat) return; // Prevent held-down key repeats
         // Ignore inputs to selectors
         if (e.target.tagName === 'SELECT' || e.target.tagName === 'INPUT') return;
+
+        // Diagnostic Console Tracker
+        const activeObstacle = this.activeObstacles ? this.activeObstacles[this.typedIndex] : null;
+        console.log(`[Diagnostic] typedInput: ${e.key}, currentLayoutMode: ${currentLayoutMode}, textCodepoint: ${this.textCodepoints ? this.textCodepoints[this.typedIndex] : undefined}, sequence: ${activeObstacle ? JSON.stringify(activeObstacle.sequence) : 'None'}, currentIndex: ${activeObstacle ? activeObstacle.currentStrokeIndex : 'None'}`);
+
 
         const isAltGrActive = (e.altKey && e.code === 'AltRight') || (e.ctrlKey && e.altKey);
 
@@ -981,7 +1145,7 @@ class TypingAdventureGame {
         if (this.isPaused) return;
 
         // Standard modifiers, function keys
-        if (e.key === 'Meta') return;
+        if (['Meta', 'CapsLock', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Dead', 'Enter', 'ContextMenu', 'PageUp', 'PageDown', 'Home', 'End'].includes(e.key)) return;
 
         // Shift modifier visual highlight
         if (e.key === 'Shift') {
@@ -1042,7 +1206,7 @@ class TypingAdventureGame {
         else if (e.code === 'Space') physicalKey = 'space';
         else physicalKey = e.key.toLowerCase();
 
-        const mapInfo = KHMER_KEYMAP[physicalKey];
+        const mapInfo = activeLayoutData ? activeLayoutData[physicalKey] : null;
         if (mapInfo) {
             if (isAltGrActive && mapInfo.altGr) {
                 typedChar = mapInfo.altGr;
@@ -1056,8 +1220,48 @@ class TypingAdventureGame {
             typedChar = e.key;
         }
 
+        // The Active Target Scope Fix: Validate we haven't passed the end of the obstacles
+        if (!this.activeObstacles || this.typedIndex >= this.activeObstacles.length) return;
+
         // Validate character typed against current index
         const expectedChar = this.textCodepoints[this.typedIndex];
+
+        // 1. Inject Binary/Hex Telemetry
+        const activeObst = this.activeObstacles[this.typedIndex];
+        console.log("Typed Hex:", escape(e.key));
+        console.log("Target Hex:", escape(expectedChar));
+
+        const normalizedTypedChar = typedChar ? typedChar.normalize('NFC') : '';
+        const normalizedFallbackKey = e.key.normalize('NFC');
+
+        let isCorrect = false;
+        let isSubStrokeMatch = false;
+        let isSequenceMismatch = false;
+
+        if (activeObst && activeObst.sequence) {
+            const expectedSubChar = activeObst.sequence[activeObst.currentStrokeIndex];
+            
+            if (normalizedTypedChar === expectedChar || normalizedFallbackKey === expectedChar) {
+                isCorrect = true;
+                activeObst.currentStrokeIndex = activeObst.sequence.length;
+            } else if (normalizedTypedChar === expectedSubChar || normalizedFallbackKey === expectedSubChar) {
+                isSubStrokeMatch = true;
+                activeObst.currentStrokeIndex++;
+
+                if (activeObst.currentStrokeIndex >= activeObst.sequence.length) {
+                    isCorrect = true;
+                }
+            } else {
+                isSequenceMismatch = true;
+            }
+        } else {
+            // NIDA comma explicit check for legacy bypass, just in case
+            if (currentLayoutMode === 'nida' && e.key === ',' && expectedChar && (expectedChar.includes('\u17BB') || expectedChar.includes('\u17C6') || expectedChar === 'ុំ')) {
+                isCorrect = true;
+            } else if (normalizedTypedChar === expectedChar || normalizedFallbackKey === expectedChar) {
+                isCorrect = true;
+            }
+        }
 
         // --- VISUAL FEEDBACK LOGIC ---
         if (typedChar && typedChar !== ' ' && typedChar !== '\u200B') {
@@ -1070,7 +1274,7 @@ class TypingAdventureGame {
             }
         }
 
-        if (typedChar === expectedChar || e.key === expectedChar) {
+        if (isCorrect) {
             if (keyEl) {
                 keyEl.classList.add('glow-correct');
                 setTimeout(() => keyEl.classList.remove('glow-correct'), 300);
@@ -1093,6 +1297,33 @@ class TypingAdventureGame {
                 }
             }
             this.processCorrectKeystroke();
+        } else if (isSubStrokeMatch) {
+            // Correct partial stroke: glow green but do not process full correct keystroke yet
+            this.correctCharsTyped++;
+            this.updateStatsDisplay();
+            synth.playClick();
+
+            if (keyEl) {
+                keyEl.classList.add('glow-correct');
+                setTimeout(() => keyEl.classList.remove('glow-correct'), 300);
+            }
+            this.updateNextCharacterHint();
+        } else if (isSequenceMismatch) {
+            // Mismatch (The Fix): Immediately trigger the error counter and log penalty without secondary checks
+            this.errorsCount++;
+            this.incorrectKeyPressCount++;
+            this.score = Math.max(0, this.score - 5);
+            this.updateStatsDisplay();
+
+            if (keyEl) {
+                keyEl.classList.add('glow-incorrect');
+                setTimeout(() => keyEl.classList.remove('glow-incorrect'), 300);
+            }
+            synth.playError();
+            this.dom.typingText.parentElement.classList.add('shake');
+            setTimeout(() => {
+                this.dom.typingText.parentElement.classList.remove('shake');
+            }, 200);
         } else {
             if (keyEl) {
                 keyEl.classList.add('glow-incorrect');
@@ -1163,12 +1394,13 @@ class TypingAdventureGame {
     processCorrectKeystroke() {
         this.correctCharsTyped++;
         this.typedIndex++;
+        this.successfulClears++;
 
         this.score += 10;
         synth.playClick();
         this.renderPromptSlab();
 
-        if (['consonants', 'vowels'].includes(this.currentLesson)) {
+        if (['consonants', 'vowels', 'independent_vowels', 'subscripts'].includes(this.currentLesson)) {
             // Clear the static obstacle at this index
             if (this.activeObstacles && this.typedIndex - 1 < this.activeObstacles.length) {
                 const target = this.activeObstacles[this.typedIndex - 1];
@@ -1202,16 +1434,48 @@ class TypingAdventureGame {
             }
         }
 
-        if (this.typedIndex >= this.textCodepoints.length) {
-            this.showLevelCompleteScreen();
+        const isIsolatedTargetMode = ['consonants', 'vowels', 'independent_vowels', 'subscripts'].includes(this.currentLesson);
+        if (isIsolatedTargetMode) {
+            let totalRequiredClears = 38;
+            if (this.currentLesson === 'consonants') totalRequiredClears = 66;
+            else if (this.currentLesson === 'independent_vowels') totalRequiredClears = 21;
+            else if (this.currentLesson === 'subscripts') totalRequiredClears = 32;
+            
+            if (this.successfulClears >= totalRequiredClears) {
+                this.showLevelCompleteScreen();
+            } else if (this.typedIndex >= this.textCodepoints.length) {
+                this.loadNextText();
+            } else {
+                this.updateNextCharacterHint();
+                this.updateStatsDisplay();
+            }
         } else {
-            this.updateNextCharacterHint();
-            this.updateStatsDisplay();
+            if (this.typedIndex >= this.textCodepoints.length) {
+                this.phrasesCleared++;
+                let targetPhrases = 10;
+                if (this.currentLesson === 'sentences') targetPhrases = 2;
+                else if (this.currentLesson === 'words') targetPhrases = 10;
+                
+                if (this.currentLesson !== 'endless' && this.phrasesCleared >= targetPhrases) {
+                    this.showLevelCompleteScreen();
+                } else {
+                    this.loadNextText();
+                }
+            } else {
+                this.updateNextCharacterHint();
+                this.updateStatsDisplay();
+            }
         }
     }
 
     processIncorrectKeystroke() {
-        if (['consonants', 'vowels'].includes(this.currentLesson)) {
+        // ALWAYS increment errors and penalize score immediately for all lessons
+        this.errorsCount++;
+        this.incorrectKeyPressCount++; 
+        this.score = Math.max(0, this.score - 5);
+        this.updateStatsDisplay();
+
+        if (['consonants', 'vowels', 'independent_vowels', 'subscripts'].includes(this.currentLesson)) {
             // Trigger enemy charge instead of instant damage/bounce
             if (this.activeObstacles && this.typedIndex < this.activeObstacles.length) {
                 const target = this.activeObstacles[this.typedIndex];
@@ -1225,14 +1489,10 @@ class TypingAdventureGame {
             setTimeout(() => {
                 this.dom.typingText.parentElement.classList.remove('shake');
             }, 200);
-
-            // Defers score penalty and audio to handleObstacleMiss collision
+            
+            synth.playError();
             return;
         }
-
-        this.errorsCount++;
-        this.incorrectKeyPressCount++; // Increment target error counter
-        this.score = Math.max(0, this.score - 5);
 
         synth.playError();
 
@@ -1241,8 +1501,6 @@ class TypingAdventureGame {
         setTimeout(() => {
             this.dom.typingText.parentElement.classList.remove('shake');
         }, 200);
-
-        this.updateStatsDisplay();
     }
 
     showLevelCompleteScreen() {
@@ -1310,7 +1568,7 @@ class TypingAdventureGame {
                 };
 
                 // Find English key key-mappings
-                const mapping = Object.values(KHMER_KEYMAP).find(k => k.code === keyId && k.shift === simulatedEvent.shiftKey);
+                const mapping = Object.values(activeLayoutData || {}).find(k => k.code === keyId && k.shift === simulatedEvent.shiftKey);
                 if (mapping) {
                     simulatedEvent.key = mapping.char;
                 } else {
@@ -1332,7 +1590,10 @@ class TypingAdventureGame {
 }
 
 // Instantiate game engine on page load
-window.addEventListener('DOMContentLoaded', () => {
+window.addEventListener('DOMContentLoaded', async () => {
+    await loadLayout('nida');
+    await loadLessons();
     const game = new TypingAdventureGame();
+    window.gameInstance = game;
     game.init();
 });
